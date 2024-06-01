@@ -117,8 +117,61 @@ BSTree bstree_eliminar(BSTree raiz, void *dato, FuncionComparadora comp, Funcion
   }
   else if(comp(raiz->dato,dato) > 0)
     raiz->izq = bstree_eliminar(raiz->izq, dato, comp, destr);
-  //else if(comp(raiz->dato,dato) < 0)
-  raiz->der = bstree_eliminar(raiz->der, dato, comp, destr);
+  else //if(comp(raiz->dato,dato) < 0)
+    raiz->der = bstree_eliminar(raiz->der, dato, comp, destr);
 
   return raiz;
 }
+
+/*
+ 1
+   2
+     5
+   4   7
+  3   6
+        n
+       n n
+*/
+
+void no_hacer_nada(void* dato) {
+}
+BSTree bstree_eliminar_balta(BSTree raiz, void *dato, FuncionComparadora comp, FuncionDestructora destr) {
+  //printf("Dato a eliinar: %d", *((int *)dato));
+  if(raiz == NULL)
+    return NULL;
+  if(comp(raiz->dato, dato) == 0) {
+    BSTree succ = raiz->der;
+    if(raiz->izq == NULL){
+      destr(raiz->dato);
+      free(raiz);
+      return succ;
+    }
+    if(raiz->der == NULL){
+      succ = raiz->izq;
+      destr(raiz->dato);
+      free(raiz);
+      return succ;
+    }
+    //Smallest in right subtree
+    BSTree rightNode = raiz->der;
+    while (succ->izq != NULL) 
+      succ = succ->izq;
+    destr(raiz->dato);
+    raiz->dato = succ->dato;
+    raiz->der = bstree_eliminar_balta(rightNode, succ->dato, comp, no_hacer_nada);
+  }
+  else if(comp(raiz->dato,dato) > 0)
+    raiz->izq = bstree_eliminar_balta(raiz->izq, dato, comp, destr);
+  else //if(comp(raiz->dato,dato) < 0)
+    raiz->der = bstree_eliminar_balta(raiz->der, dato, comp, destr);
+
+  return raiz;
+}
+
+/*
+ 1
+  2
+    6
+   3  7
+
+*/

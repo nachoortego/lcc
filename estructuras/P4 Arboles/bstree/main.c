@@ -44,17 +44,17 @@ int main() {
   puts("");
 
   printf("Elimino 5: ");
-  bstree_eliminar(arbol, &arr[2], comparar_entero, destruir_entero); // Pasa la dirección de memoria de arr[3]
+  bstree_eliminar_balta(arbol, &arr[2], comparar_entero, destruir_entero); // Pasa la dirección de memoria de arr[3]
   bstree_recorrer(arbol, BTREE_RECORRIDO_IN, imprimir_entero, NULL);
   puts("");
 
   printf("Elimino 4: ");
-  bstree_eliminar(arbol, &arr[4], comparar_entero, destruir_entero); // Pasa la dirección de memoria de arr[3]
+  bstree_eliminar_balta(arbol, &arr[4], comparar_entero, destruir_entero); // Pasa la dirección de memoria de arr[3]
   bstree_recorrer(arbol, BTREE_RECORRIDO_IN, imprimir_entero, NULL);
   puts("");
 
   printf("Elimino 6: ");
-  bstree_eliminar(arbol, &arr[6], comparar_entero, destruir_entero); // Pasa la dirección de memoria de arr[5]
+  bstree_eliminar_balta(arbol, &arr[6], comparar_entero, destruir_entero); // Pasa la dirección de memoria de arr[5]
   bstree_recorrer(arbol, BTREE_RECORRIDO_IN, imprimir_entero, NULL);
   puts("");
 
@@ -67,10 +67,10 @@ int main() {
 
 /*
  1
-  2
-    5
-   4 7
-  3 6
+   2
+     5
+   4   7
+  3   6
 */
 
 /*
