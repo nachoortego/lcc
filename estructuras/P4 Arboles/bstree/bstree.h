@@ -51,4 +51,9 @@ BSTree bstree_eliminar(BSTree raiz, void *dato, FuncionComparadora comp, Funcion
 */
 BSTree bstree_k_esimo_menor(BSTree raiz, int k);
 
+/**
+ * Retorna 1 si el arbol es ABB, 0 si no lo es
+*/
+int bstree_validar(BSTree raiz);
+
 #endif //__BSTREE_H__
