@@ -200,13 +200,13 @@ BSTree bstree_k_esimo_menor(BSTree raiz, int k) {
 }
 
 BSTree bstree_validar_aux(BSTree raiz, FuncionComparadora comp, void* anterior, int* validar){
+  bstree_validar_aux(raiz->izq, comp, anterior, validar);
   if(raiz == NULL)
     return NULL;
   if(comp(anterior,raiz->dato) > 0){
     *validar = 0;
   }
   anterior = raiz->dato;
-  bstree_validar_aux(raiz->izq, comp, anterior, validar);
   bstree_validar_aux(raiz->der, comp, anterior, validar);
 }
 
