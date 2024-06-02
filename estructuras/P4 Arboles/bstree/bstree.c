@@ -175,3 +175,26 @@ BSTree bstree_eliminar_balta(BSTree raiz, void *dato, FuncionComparadora comp, F
    3  7
 
 */
+
+struct k_esimo {
+  int count;
+  void* dato;
+};
+
+void k_esimo_visita(void* dato, void* extra) {
+  struct k_esimo* extra_data = (struct k_esimo*)extra;
+  if (extra_data->count == 1){
+    extra_data->dato = dato;
+    extra_data->count = -1;
+  }
+  else 
+    extra_data->count = extra_data->count - 1;
+}
+
+BSTree bstree_k_esimo_menor(BSTree raiz, int k) {
+  struct k_esimo extra;
+  extra.count = k;
+  extra.dato = NULL;
+  bstree_recorrer(raiz,BTREE_RECORRIDO_IN,k_esimo_visita,&extra);
+  return extra.dato;
+}

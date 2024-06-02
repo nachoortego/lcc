@@ -43,6 +43,10 @@ int main() {
   bstree_recorrer(arbol, BTREE_RECORRIDO_IN, imprimir_entero, NULL);
   puts("");
 
+  printf("3-esimo menor elemento : ");
+  imprimir_entero(bstree_k_esimo_menor(arbol,3),NULL);
+  puts("");
+
   printf("Elimino 5: ");
   bstree_eliminar_balta(arbol, &arr[2], comparar_entero, destruir_entero); // Pasa la dirección de memoria de arr[3]
   bstree_recorrer(arbol, BTREE_RECORRIDO_IN, imprimir_entero, NULL);
@@ -57,6 +61,7 @@ int main() {
   bstree_eliminar_balta(arbol, &arr[6], comparar_entero, destruir_entero); // Pasa la dirección de memoria de arr[5]
   bstree_recorrer(arbol, BTREE_RECORRIDO_IN, imprimir_entero, NULL);
   puts("");
+
 
   // Destruir arbol
   bstree_destruir(arbol, destruir_entero);

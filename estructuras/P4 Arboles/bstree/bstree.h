@@ -46,4 +46,9 @@ void bstree_recorrer(BSTree, BSTreeRecorrido, FuncionVisitanteExtra,
  */
 BSTree bstree_eliminar(BSTree raiz, void *dato, FuncionComparadora comp, FuncionDestructora destr);
 
+/**
+ * Retorna el k-esimo menor elemento del ABB
+*/
+BSTree bstree_k_esimo_menor(BSTree raiz, int k);
+
 #endif //__BSTREE_H__
