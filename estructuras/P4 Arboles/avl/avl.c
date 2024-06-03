@@ -119,6 +119,23 @@ static int avl_nodo_factor_balance(AVL_Nodo* raiz) {
  * avl_nodo_rotacion_simple_izq: Funcion interna que realiza una rotacion simple
  * a izquierda y retorna la nueva raiz.
  */
+/*
+      6
+    4   7
+  2   5
+     X 
+
+     6
+   5   7
+  4
+ 2  X
+
+      5
+    4   6
+   2 X   7
+     
+ 
+*/
 static AVL_Nodo* avl_nodo_rotacion_simple_izq(AVL_Nodo* raiz) {
   AVL_Nodo* hijoDer = raiz->der;
   assert(hijoDer != NULL);
@@ -159,17 +176,6 @@ static AVL_Nodo* avl_nodo_rotacion_simple_der(AVL_Nodo* raiz) {
   return hijoIzq;
 }
 
-/*
-      6
-    4   7
-  2   5
-1  3
-
-     4
-  2     6
-1   3 5   7 
-*/
-
 /**
  * avl_nodo_crear: Funcion interna que crea un nuevo nodo y lo retorna.
  * La altura de un nodo hoja es 0.
@@ -182,6 +188,7 @@ static AVL_Nodo* avl_nodo_crear(void* dato, FuncionCopiadora copia) {
   nuevoNodo->altura = 0;
   return nuevoNodo;
 }
+
 
 /**
  * avl_insertar: Inserta un dato no repetido en el arbol, manteniendo la
@@ -204,8 +211,15 @@ static AVL_Nodo* avl_nodo_insertar(AVL_Nodo* raiz, void* dato,
     return raiz;
   }
   else if (comp(raiz->dato, dato) < 0) { // el dato debe ir en el subarbol der
-    /** COMPLETAR */
-    assert(0);
+    raiz->der = avl_nodo_insertar(raiz->der, dato, copia, comp);
+    // chequear balance
+    if(avl_nodo_factor_balance(raiz) == 2) {
+      // casos 3 o 4
+      if(avl_nodo_factor_balance(raiz->der) == -1) // caso 4
+        raiz->der = avl_nodo_rotacion_simple_der(raiz->der);
+      raiz = avl_nodo_rotacion_simple_izq(raiz); // caso 3
+    }
+    raiz->altura = 1 + avl_nodo_max_altura_hijos(raiz);
     return raiz;
   }
   else // no agregar elementos repetidos
