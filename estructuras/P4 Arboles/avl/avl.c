@@ -296,3 +296,53 @@ void avl_recorrer(AVL arbol, AVLRecorrido orden, FuncionVisitanteExtra visita,
   void* extra) {
   avl_nodo_recorrer(arbol->raiz, orden, visita, extra);
 }
+
+static AVL_Nodo* avl_eliminar_r(AVL_Nodo* raiz, void* dato, FuncionComparadora comp, FuncionDestructora destr) {
+  if(raiz == NULL)
+    return NULL;
+  if(comp(raiz->dato, dato) == 0) {
+    AVL_Nodo* succ = raiz->der;
+    if(raiz->izq == NULL){
+      destr(raiz->dato);
+      free(raiz);
+      return succ;
+    }
+    if(raiz->der == NULL){
+      succ = raiz->izq;
+      destr(raiz->dato);
+      free(raiz);
+      return succ;
+    }
+    //Smallest in right subtree
+    AVL_Nodo* succParent = raiz;
+    while (succ->izq != NULL) {
+      succParent = succ;
+      succ = succ->izq;
+    }
+    destr(raiz->dato);
+    raiz->dato = succ->dato;
+    if (succParent->izq == succ)
+      succParent->izq = succ->der;
+    else
+      succParent->der = succ->der;
+    free(succ);
+  }
+  else if(comp(raiz->dato,dato) > 0)
+    raiz->izq = avl_eliminar_r(raiz->izq, dato, comp, destr);
+  else //if(comp(raiz->dato,dato) < 0)
+    raiz->der = avl_eliminar_r(raiz->der, dato, comp, destr);
+
+  return raiz;
+}
+
+void avl_eliminar(AVL arbol, void *dato) {
+  arbol->raiz = avl_eliminar_r(arbol->raiz, dato, arbol->comp, arbol->destr);
+  return arbol;
+}
+
+/*
+Definir las siguientes funciones para Heap
+ * Hijo_derecho(pos)
+ * Hijo_izquierdo(pos)
+ * Padre(pos)
+*/

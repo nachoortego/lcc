@@ -46,4 +46,9 @@ int avl_validar(AVL);
  */
 void avl_recorrer(AVL, AVLRecorrido, FuncionVisitanteExtra, void *);
 
+/**
+ * Recorrido DSF del arbol
+ */
+void avl_eliminar(AVL, void *);
+
 #endif /* __AVL_H__*/
