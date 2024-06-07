@@ -11,7 +11,7 @@ int right(int nodo){
 }
 
 int father(int nodo){
-  return nodo/2;
+  return (nodo - 1) / 2;
 }
 
 BHeap bheap_crear(int capacidad, FuncionComparadora comp){
@@ -40,13 +40,19 @@ void bheap_recorrer(BHeap heap, FuncionVisitante visit){
 
 BHeap bheap_insertar(BHeap heap, void* dato){
   // Realoco el arreglo si no hay memoria
-  if(heap->capacidad == heap->ultimo) {
+  if(heap->ultimo + 1 == heap->capacidad) {
     heap->capacidad *= 2;
     heap->arr = realloc(heap->arr, sizeof(void *) * heap->capacidad);
   }
   // Agrego el elemento al final del array
   heap->ultimo++;
   heap->arr[heap->ultimo] = dato;
+  int nodo = heap->ultimo;
+  for(; heap->ultimo > 0 && heap->comp(heap->arr[nodo], heap->arr[father(nodo)]) > 0; nodo = father(nodo)) {
+    void* temp = heap->arr[nodo];
+    heap->arr[nodo] = heap->arr[father(nodo)];
+    heap->arr[father(nodo)] = temp;
+  }
 
   return heap;
 }
