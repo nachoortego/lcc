@@ -340,9 +340,3 @@ void avl_eliminar(AVL arbol, void *dato) {
   return arbol;
 }
 
-/*
-Definir las siguientes funciones para Heap
- * Hijo_derecho(pos)
- * Hijo_izquierdo(pos)
- * Padre(pos)
-*/
