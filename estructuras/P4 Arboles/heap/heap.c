@@ -18,7 +18,7 @@ BHeap bheap_crear(int capacidad, FuncionComparadora comp){
   BHeap heap = malloc(sizeof(struct _BHeap));
   heap->arr = malloc(sizeof(void *) * capacidad);
   heap->capacidad = capacidad;
-  heap->ultimo = -1;
+  heap->ultimo = 0;
   heap->comp = comp;
   
   return heap;
@@ -47,12 +47,22 @@ BHeap bheap_insertar(BHeap heap, void* dato){
   // Agrego el elemento al final del array
   heap->ultimo++;
   heap->arr[heap->ultimo] = dato;
+  // Hago flotar el nuevo nodo
   int nodo = heap->ultimo;
-  for(; heap->ultimo > 0 && heap->comp(heap->arr[nodo], heap->arr[father(nodo)]) > 0; nodo = father(nodo)) {
+  for(; heap->ultimo > 1 && heap->comp(heap->arr[nodo], heap->arr[father(nodo)]) > 0; nodo = father(nodo)) {
     void* temp = heap->arr[nodo];
     heap->arr[nodo] = heap->arr[father(nodo)];
     heap->arr[father(nodo)] = temp;
   }
 
   return heap;
+}
+
+BHeap bheap_eliminar(BHeap heap){
+  int esMayor = 1;
+  void* max = heap->arr[0];
+  heap->arr[0] = heap->arr[heap->ultimo]; // Sobreescribo el nodo raiz con el nodo mas chico
+  heap->ultimo--;
+
+  //while( && esMayor)
 }
