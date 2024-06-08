@@ -13,7 +13,7 @@ static void imprimir_entero(void *dato) {
 }
 
 int main() {
-  BHeap heap = bheap_crear(2,comparar_entero);
+  BHeap heap = bheap_crear(20,comparar_entero);
   printf("Vacio? %d\n",bheap_es_vacio(heap));
 
   int arr[9] = {10, 20, 15, 25, 30, 16, 18, 19};
@@ -23,6 +23,23 @@ int main() {
   printf("Vacio? %d\n",bheap_es_vacio(heap));
   bheap_recorrer(heap, imprimir_entero);
   puts("");
+
+  bheap_eliminar(heap);
+  bheap_recorrer(heap, imprimir_entero);
+  puts("");
+  
+  bheap_eliminar(heap);
+  bheap_recorrer(heap, imprimir_entero);
+  puts("");
+
+  bheap_eliminar(heap);
+  bheap_recorrer(heap, imprimir_entero);
+  puts("");
+
+  bheap_eliminar(heap);
+  bheap_recorrer(heap, imprimir_entero);
+  puts("");
+
   bheap_destruir(heap);
 
   return 0;
