@@ -21,7 +21,6 @@ int* generarArrAleatorio(int size) {
 }
 
 int main() {
-  srand(time(NULL));
   BHeap heap = bheap_crear(20,comparar_entero);
   printf("Vacio? %d\n",bheap_es_vacio(heap));
 
@@ -33,19 +32,7 @@ int main() {
   bheap_recorrer(heap, imprimir_entero);
   puts("");
 
-  bheap_eliminar(heap);
-  bheap_recorrer(heap, imprimir_entero);
-  puts("");
-
-  bheap_eliminar(heap);
-  bheap_recorrer(heap, imprimir_entero);
-  puts("");
-
-  bheap_eliminar(heap);
-  bheap_recorrer(heap, imprimir_entero);
-  puts("");
-
-  bheap_eliminar(heap);
+  bheap_eliminar(heap, 2);
   bheap_recorrer(heap, imprimir_entero);
   puts("");
 
@@ -53,7 +40,7 @@ int main() {
 
 
 
-
+  srand(time(NULL));
   BHeap heapRand = bheap_crear(20,comparar_entero);
 
   int cantNumeros = 100;
@@ -67,6 +54,7 @@ int main() {
 
   bheap_destruir(heapRand);
   free(arrRandom);
+
 
   return 0;
 }

@@ -61,27 +61,33 @@ BHeap bheap_insertar(BHeap heap, void* dato) {
 }
 
 
-BHeap bheap_eliminar(BHeap heap){
+BHeap bheap_eliminar(BHeap heap, int index) {
   int esMayor = 1;
   int hijoMayor;
 
-  heap->arr[0] = heap->arr[heap->ultimo]; // Sobreescribo el nodo raiz con el nodo mas chico
-  heap->ultimo--;
+  // Mover el último nodo al índice del nodo a eliminar
+  heap->arr[index] = heap->arr[heap->ultimo-1];
+  heap->ultimo--; // Reducir el tamaño del heap
 
-  int nodo = 1;
-  while(nodo*2 <= heap->ultimo && esMayor){ // Mientras tenga algun hijo
-    hijoMayor = left(nodo); // Hijo izquierdo
-    if(left(nodo)+1 <= heap->ultimo && heap->comp(heap->arr[left(nodo)+1], heap->arr[left(nodo)]) > 0)
-      hijoMayor = right(nodo); // Si existe el derecho y es mayor
-    if(heap->comp(heap->arr[nodo], heap->arr[hijoMayor]) > 0)
-      esMayor = 0; // Si el nodo es mayor que ambos hijos
+  int nodo = index;
+  while (left(nodo) <= heap->ultimo && esMayor) { // Mientras tenga al menos un hijo
+    hijoMayor = left(nodo); // Hijo izquierdo por defecto
+
+    if (right(nodo) <= heap->ultimo && heap->comp(heap->arr[right(nodo)], heap->arr[left(nodo)]) > 0)
+      hijoMayor = right(nodo); // Si el derecho existe y es mayor, seleccionarlo
+
+    if (heap->comp(heap->arr[nodo], heap->arr[hijoMayor]) >= 0) 
+      esMayor = 0; // Si el nodo es mayor o igual que ambos hijos, detener
+
     else {
+      // Intercambiar nodo con el hijo mayor
       void* temp = heap->arr[nodo];
       heap->arr[nodo] = heap->arr[hijoMayor];
       heap->arr[hijoMayor] = temp;
-      nodo = hijoMayor; // Interacmbiamos nodo con el hijo mayor
+      nodo = hijoMayor; // Continuar con el hijo mayor
     }
   }
 
   return heap;
 }
+

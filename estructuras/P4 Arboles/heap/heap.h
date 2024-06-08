@@ -55,6 +55,6 @@ BHeap bheap_insertar(BHeap, void*);
 /*  
   * Elimina un elemento del heap.
 */
-BHeap bheap_eliminar(BHeap);
+BHeap bheap_eliminar(BHeap, int);
 
 #endif /* __HEAP__ */
