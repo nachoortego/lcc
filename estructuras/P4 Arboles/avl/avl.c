@@ -329,28 +329,10 @@ static AVL_Nodo* avl_eliminar_r(AVL_Nodo* raiz, void* dato, FuncionComparadora c
       succParent->der = succ->der;
     free(succ);
   }
-  else if(comp(raiz->dato,dato) > 0) {
+  else if(comp(raiz->dato,dato) > 0) 
     raiz->izq = avl_eliminar_r(raiz->izq, dato, comp, destr);
-    // chequear balance
-    if(avl_nodo_factor_balance(raiz) == 2) {
-      // casos 3 o 4
-      if(avl_nodo_factor_balance(raiz->der) == -1) // caso 4
-        raiz->der = avl_nodo_rotacion_simple_der(raiz->der);
-      raiz = avl_nodo_rotacion_simple_izq(raiz); // caso 3
-    }
-    raiz->altura = 1 + avl_nodo_max_altura_hijos(raiz);
-  }
-  else { //if(comp(raiz->dato,dato) < 0)
+  else //if(comp(raiz->dato,dato) < 0)
     raiz->der = avl_eliminar_r(raiz->der, dato, comp, destr);
-    // chequear balance
-    if (avl_nodo_factor_balance(raiz) == -2) {
-      // casos 1 o 2
-      if (avl_nodo_factor_balance(raiz->izq) == 1) // caso 2
-        raiz->izq = avl_nodo_rotacion_simple_izq(raiz->izq);
-      raiz = avl_nodo_rotacion_simple_der(raiz); // caso 1
-    }
-    raiz->altura = 1 + avl_nodo_max_altura_hijos(raiz);
-  }
 
   // Si el nodo eliminado es la raiz, hay que chequear desde la raiz
   if (avl_nodo_factor_balance(raiz) == -2) {
