@@ -79,8 +79,35 @@ int* merge_sort(int* arr, int len) {
   }
 }
 
-void quicksort(int* a, int len) {
-  assert(0);
+// Lomuto partition scheme
+int lomuto_partition(int* a, int low, int high) {
+    int pivot = a[high];
+    int i = low;
+    for (int j = low; j < high; j++) {
+        if (a[j] <= pivot) {
+            int temp = a[i];
+            a[i] = a[j];
+            a[j] = temp;
+            i++;
+        }
+    }
+    int temp = a[i];
+    a[i] = a[high];
+    a[high] = temp;
+    return i;
+}
+
+// Quicksort function
+void quicksort_r(int* a, int low, int high) {
+    if (low < high) {
+        int pi = lomuto_partition(a, low, high);
+        quicksort_r(a, low, pi - 1);
+        quicksort_r(a, pi + 1, high);
+    }
+}
+
+void quicksort(int* a, int len){
+  quicksort_r(a, 0, len-1);
 }
 
 int main() {
@@ -90,10 +117,13 @@ int main() {
   // insertion_sort(arr, 9);
   // print(arr, 9);
 
-  int* sorted = merge_sort(arr, 9);
-  print(sorted, 9);
+  // int* sorted = merge_sort(arr, 9);
+  // print(sorted, 9);
+  
+  quicksort(arr, 9);
+  print(arr, 9);
 
-  free(sorted);
+  // free(sorted);
 
   return 0;
 }
