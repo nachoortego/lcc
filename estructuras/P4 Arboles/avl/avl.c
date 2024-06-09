@@ -303,11 +303,13 @@ static AVL_Nodo* avl_eliminar_r(AVL_Nodo* raiz, void* dato, FuncionComparadora c
   if(comp(raiz->dato, dato) == 0) {
     AVL_Nodo* succ = raiz->der;
     if(raiz->izq == NULL){
+      // Como su nodo a izq es NULL, su factor balance era 1 y ahora es 0
       destr(raiz->dato);
       free(raiz);
       return succ;
     }
     if(raiz->der == NULL){
+      // Como su nodo a der es NULL, su factor balance era -1 y ahora es 0
       succ = raiz->izq;
       destr(raiz->dato);
       free(raiz);
@@ -327,15 +329,33 @@ static AVL_Nodo* avl_eliminar_r(AVL_Nodo* raiz, void* dato, FuncionComparadora c
       succParent->der = succ->der;
     free(succ);
   }
-  else if(comp(raiz->dato,dato) > 0)
+  else if(comp(raiz->dato,dato) > 0) {
     raiz->izq = avl_eliminar_r(raiz->izq, dato, comp, destr);
-  else //if(comp(raiz->dato,dato) < 0)
+    // chequear balance
+    if(avl_nodo_factor_balance(raiz) == 2) {
+      // casos 3 o 4
+      if(avl_nodo_factor_balance(raiz->der) == -1) // caso 4
+        raiz->der = avl_nodo_rotacion_simple_der(raiz->der);
+      raiz = avl_nodo_rotacion_simple_izq(raiz); // caso 3
+    }
+    raiz->altura = 1 + avl_nodo_max_altura_hijos(raiz);
+  }
+  else { //if(comp(raiz->dato,dato) < 0)
     raiz->der = avl_eliminar_r(raiz->der, dato, comp, destr);
+    // chequear balance
+    if (avl_nodo_factor_balance(raiz) == -2) {
+      // casos 1 o 2
+      if (avl_nodo_factor_balance(raiz->izq) == 1) // caso 2
+        raiz->izq = avl_nodo_rotacion_simple_izq(raiz->izq);
+      raiz = avl_nodo_rotacion_simple_der(raiz); // caso 1
+    }
+    raiz->altura = 1 + avl_nodo_max_altura_hijos(raiz);
+  }
 
   return raiz;
 }
 
-void avl_eliminar(AVL arbol, void *dato) {
+AVL avl_eliminar(AVL arbol, void *dato) {
   arbol->raiz = avl_eliminar_r(arbol->raiz, dato, arbol->comp, arbol->destr);
   return arbol;
 }
