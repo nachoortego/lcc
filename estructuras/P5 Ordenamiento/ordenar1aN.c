@@ -8,7 +8,7 @@
 // NO verifica que la entrada sea correcta (es decir, no verifica que
 // no haya numeros repetidos ni que respeten los rangos del problema).
 int* generar_prueba(int *n) {
-  char buf[256], *tok, *start;
+  char buf[256];
   unsigned size = 50;
   unsigned len = 0;
 
@@ -91,4 +91,3 @@ int main() {
   }
   return 0;
 }
-
