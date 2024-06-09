@@ -59,24 +59,23 @@ int main() {
   for (int i = 0; i < 6; ++i)
     assert(avl_buscar(arbol2, otrosNumeros + i) == 0);
 
-
-  // arbol2 = avl_eliminar(arbol2, &numeros[7]); // 19
-  // printf("Se elimino 19. Recorrido preorden: ");
-  // avl_recorrer(arbol2, AVL_RECORRIDO_PRE, imprimir_puntero_entero, NULL);
-  // puts("");
-
-  // arbol2 = avl_eliminar(arbol2, &numeros[0]); // 10
-  // printf("Se elimino 10. Recorrido preorden: ");
-  // avl_recorrer(arbol2, AVL_RECORRIDO_PRE, imprimir_puntero_entero, NULL);
-  // puts("");
-
-  // arbol2 = avl_eliminar(arbol2, &numeros[2]); // 15
-  // printf("Se elimino 15. Recorrido preorden: ");
-  // avl_recorrer(arbol2, AVL_RECORRIDO_PRE, imprimir_puntero_entero, NULL);
-  // puts("");
-
   arbol2 = avl_eliminar(arbol2, &numeros[1]); // 20
   printf("Se elimino 20. Recorrido preorden: ");
+  avl_recorrer(arbol2, AVL_RECORRIDO_PRE, imprimir_puntero_entero, NULL);
+  puts("");
+
+  arbol2 = avl_eliminar(arbol2, &numeros[7]); // 19
+  printf("Se elimino 19. Recorrido preorden: ");
+  avl_recorrer(arbol2, AVL_RECORRIDO_PRE, imprimir_puntero_entero, NULL);
+  puts("");
+
+  arbol2 = avl_eliminar(arbol2, &numeros[0]); // 10
+  printf("Se elimino 10. Recorrido preorden: ");
+  avl_recorrer(arbol2, AVL_RECORRIDO_PRE, imprimir_puntero_entero, NULL);
+  puts("");
+
+  arbol2 = avl_eliminar(arbol2, &numeros[2]); // 15
+  printf("Se elimino 15. Recorrido preorden: ");
   avl_recorrer(arbol2, AVL_RECORRIDO_PRE, imprimir_puntero_entero, NULL);
   puts("");
 
