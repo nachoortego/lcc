@@ -1,6 +1,8 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include <assert.h>
+#include <time.h>
+
 
 void print(int a[], int len) {
   int i = 0;
@@ -55,12 +57,21 @@ void sort(int* arr, int n) {
 }
 
 int main() {
-  int arr[] = { 4, 3, 5, 7, 2, 9, 1, 6, 8};
-  print(arr,9);
-  heapify(arr,9);
-  print(arr,9);
-  sort(arr,9);
-  print(arr,9);
+  // int arr[] = { 4, 3, 5, 7, 2, 9, 1, 6, 8};
+  int arr[1000];
+  srand(time(NULL));
+  for(int i = 0; i < 1000; i++)
+    arr[i] = rand()%10000;
+  // print(arr,9);
+  // heapify(arr,9);
+  // print(arr,9);
+  // sort(arr,9);
+  // print(arr,9);
+  print(arr,1000);
+  // heapify(arr,1000);
+  // print(arr,1000);
+  sort(arr,1000);
+  print(arr,1000);
 
   return 0;
 }
