@@ -96,8 +96,20 @@ void tablahash_insertar(TablaHash tabla, void *dato) {
     tabla->elems[idx].dato = tabla->copia(dato);
     return;
   }
-  // No hacer nada si hay colision.
+  // linear probing si hay colision.
   else {
+    unsigned i = idx + 1;
+    while(i != idx) {
+      if(i == tabla->capacidad) // Si llega al final de la tabla
+        i = 0;
+      if (tabla->elems[i].dato == NULL) {
+        tabla->numElems++;
+        tabla->elems[i].dato = tabla->copia(dato);
+        return;
+      }
+      i++;
+    }
+    perror("No hay lugar en la tabla");
     return;
   }
 }
@@ -114,13 +126,25 @@ void *tablahash_buscar(TablaHash tabla, void *dato) {
   // Retornar NULL si la casilla estaba vacia.
   if (tabla->elems[idx].dato == NULL)
     return NULL;
-  // Retornar el dato de la casilla si hay concidencia.
+  // Retornar el dato de la casilla si hay coincidencia.
   else if (tabla->comp(tabla->elems[idx].dato, dato) == 0)
     return tabla->elems[idx].dato;
-  // Retornar NULL en otro caso.
-  else
-    return NULL;
+  // Buscar utilizando linear probing si hay colisiones.
+  else {  
+    unsigned i = idx + 1;
+    while(i != idx) {
+      if(i == tabla->capacidad) // Si llega al final de la tabla, vuelve al principio.
+        i = 0;
+      if (tabla->elems[i].dato == NULL) // Si encuentra una casilla vacía, termina la búsqueda.
+        return NULL;
+      if (tabla->comp(tabla->elems[i].dato, dato) == 0) // Si encuentra el dato, lo retorna.
+        return tabla->elems[i].dato;
+      i++;
+    }
+    return NULL; // Si no encuentra el dato en toda la tabla, retorna NULL.
+  }
 }
+
 
 /**
  * Elimina el dato de la tabla que coincida con el dato dado.
@@ -130,14 +154,34 @@ void tablahash_eliminar(TablaHash tabla, void *dato) {
   // Calculamos la posicion del dato dado, de acuerdo a la funcion hash.
   unsigned idx = tabla->hash(dato) % tabla->capacidad;
 
-  // Retornar si la casilla estaba vacia.
-  if (tabla->elems[idx].dato == NULL)
+  // Si la casilla inicial está vacía, significa que el dato no está en la tabla.
+  if (tabla->elems[idx].dato == NULL) {
+    perror("El dato no está en la tabla");
     return;
-  // Vaciar la casilla si hay coincidencia.
-  else if (tabla->comp(tabla->elems[idx].dato, dato) == 0) {
+  }
+
+  // Si el dato está en la posición inicial
+  if (tabla->comp(tabla->elems[idx].dato, dato) == 0) {
     tabla->numElems--;
     tabla->destr(tabla->elems[idx].dato);
     tabla->elems[idx].dato = NULL;
     return;
   }
+
+  // Buscar utilizando linear probing si hay colisiones.
+  unsigned i = idx + 1;
+  while (i != idx) {
+    if (i == tabla->capacidad) // Si llega al final de la tabla, vuelve al principio.
+      i = 0;
+    if (tabla->elems[i].dato == NULL) // Si encuentra una casilla vacía, termina la búsqueda.
+      return;
+    if (tabla->comp(tabla->elems[i].dato, dato) == 0) { // Si encuentra el dato, lo elimina.
+      tabla->numElems--;
+      tabla->destr(tabla->elems[i].dato);
+      tabla->elems[i].dato = NULL;
+      return;
+    }
+    i++;
+  }
+  // No encuentra el dato en toda la tabla.
 }
