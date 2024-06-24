@@ -1,0 +1,16 @@
+4 lemas de cardinalidad
+Def FRP
+Def Potencia de FRP y demostrar que es FRP
+Def Ackerman X y demostrar que no es FRP. Explicar importancia del resultado
+Cuándo una FRL representa una función numérica?
+Demostrar que FR tiene el mismo poder de cálculo que FRL
+Definir gramática y lenguaje de tipo 1
+Demostrar que L3 está contenido estricto en L2
+Lema de bombeo de autómatas finitos
+Lema bombeo para indep contexto
+Cuál es el algoritmo para pasar de autómata finito no determinista a uno det
+Definir funcion L que asocia un lenguaje a una expresión regular
+Cómo construir un autómata de pila con su pila vacía
+Def Máquina Turing
+Halting problem
+L = {O^n # 0^2n # 0^3n, n € naturales} no es indep contexto
