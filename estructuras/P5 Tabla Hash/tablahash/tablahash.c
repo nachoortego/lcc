@@ -97,7 +97,8 @@ void tablahash_insertar(TablaHash tabla, void *dato) {
   if (tabla->elems[idx].dato == NULL) {
     tabla->numElems++;
     tabla->elems[idx].dato = tabla->copia(dato);
-    tabla->factorCarga = tablahash_factorcarga(tabla);
+    if((tabla->factorCarga = tablahash_factorcarga(tabla)) > 0.7)
+      tabla_rehashear(tabla);
     return;
   }
   // Sobrescribir el dato si el mismo ya se encontraba en la tabla.
@@ -115,7 +116,8 @@ void tablahash_insertar(TablaHash tabla, void *dato) {
       if (tabla->elems[i].dato == NULL) {
         tabla->numElems++;
         tabla->elems[i].dato = tabla->copia(dato);
-        tabla->factorCarga = tablahash_factorcarga(tabla);
+        if((tabla->factorCarga = tablahash_factorcarga(tabla)) > 0.7)
+          tabla_rehashear(tabla);
         return;
       }
       i++;
@@ -175,7 +177,8 @@ void tablahash_eliminar(TablaHash tabla, void *dato) {
     tabla->numElems--;
     tabla->destr(tabla->elems[idx].dato);
     tabla->elems[idx].dato = NULL;
-    tabla->factorCarga = tablahash_factorcarga(tabla);
+    if((tabla->factorCarga = tablahash_factorcarga(tabla)) > 0.7)
+      tabla_rehashear(tabla);
     return;
   }
 
@@ -190,10 +193,24 @@ void tablahash_eliminar(TablaHash tabla, void *dato) {
       tabla->numElems--;
       tabla->destr(tabla->elems[i].dato);
       tabla->elems[i].dato = NULL;
-      tabla->factorCarga = tablahash_factorcarga(tabla);
+      if((tabla->factorCarga = tablahash_factorcarga(tabla)) > 0.7)
+        tabla_rehashear(tabla);
       return;
     }
     i++;
   }
   // No encuentra el dato en toda la tabla.
+}
+
+/**
+ * Rehashea la tabla.
+ */
+void tabla_rehashear(TablaHash tabla) {
+  TablaHash nuevaTabla = tablahash_crear(tabla->capacidad*2,tabla->copia, tabla->comp, tabla->destr, tabla->hash);
+  for(int idx = 0; idx < tabla->capacidad; ++idx) {
+    if(tabla->elems[idx].dato != NULL)
+      tablahash_insertar(nuevaTabla, tabla->elems[idx].dato);
+  }
+  tablahash_destruir(tabla);
+  tabla = nuevaTabla;
 }
