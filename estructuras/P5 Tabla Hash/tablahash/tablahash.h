@@ -26,6 +26,11 @@ TablaHash tablahash_crear(unsigned capacidad, FuncionCopiadora copia,
 int tablahash_nelems(TablaHash tabla);
 
 /**
+ * Actualiza el factor de carga de la tabla.
+ */
+float tablahash_factorcarga(TablaHash tabla);
+
+/**
  * Retorna la capacidad de la tabla.
  */
 int tablahash_capacidad(TablaHash tabla);

@@ -20,6 +20,7 @@ struct _TablaHash {
   FuncionComparadora comp;
   FuncionDestructora destr;
   FuncionHash hash;
+  float factorCarga;
 };
 
 /**
@@ -40,6 +41,7 @@ TablaHash tablahash_crear(unsigned capacidad, FuncionCopiadora copia,
   tabla->comp = comp;
   tabla->destr = destr;
   tabla->hash = hash;
+  tabla->factorCarga = tabla->numElems / tabla->capacidad;
 
   // Inicializamos las casillas con datos nulos.
   for (unsigned idx = 0; idx < capacidad; ++idx) {
@@ -53,6 +55,13 @@ TablaHash tablahash_crear(unsigned capacidad, FuncionCopiadora copia,
  * Retorna el numero de elementos de la tabla.
  */
 int tablahash_nelems(TablaHash tabla) { return tabla->numElems; }
+
+/**
+ * Actualiza el factor de carga de la tabla.
+ */
+float tablahash_factorcarga(TablaHash tabla){
+  return (float)tabla->numElems / tabla->capacidad;
+}
 
 /**
  * Retorna la capacidad de la tabla.
@@ -88,6 +97,7 @@ void tablahash_insertar(TablaHash tabla, void *dato) {
   if (tabla->elems[idx].dato == NULL) {
     tabla->numElems++;
     tabla->elems[idx].dato = tabla->copia(dato);
+    tabla->factorCarga = tablahash_factorcarga(tabla);
     return;
   }
   // Sobrescribir el dato si el mismo ya se encontraba en la tabla.
@@ -100,11 +110,12 @@ void tablahash_insertar(TablaHash tabla, void *dato) {
   else {
     unsigned i = idx + 1;
     while(i != idx) {
-      if(i == tabla->capacidad) // Si llega al final de la tabla
+      if(i == tabla->capacidad + 1) // Si llega al final de la tabla
         i = 0;
       if (tabla->elems[i].dato == NULL) {
         tabla->numElems++;
         tabla->elems[i].dato = tabla->copia(dato);
+        tabla->factorCarga = tablahash_factorcarga(tabla);
         return;
       }
       i++;
@@ -112,6 +123,7 @@ void tablahash_insertar(TablaHash tabla, void *dato) {
     perror("No hay lugar en la tabla");
     return;
   }
+
 }
 
 /**
@@ -133,10 +145,8 @@ void *tablahash_buscar(TablaHash tabla, void *dato) {
   else {  
     unsigned i = idx + 1;
     while(i != idx) {
-      if(i == tabla->capacidad) // Si llega al final de la tabla, vuelve al principio.
+      if(i == tabla->capacidad + 1) // Si llega al final de la tabla, vuelve al principio.
         i = 0;
-      if (tabla->elems[i].dato == NULL) // Si encuentra una casilla vacía, termina la búsqueda.
-        return NULL;
       if (tabla->comp(tabla->elems[i].dato, dato) == 0) // Si encuentra el dato, lo retorna.
         return tabla->elems[i].dato;
       i++;
@@ -165,6 +175,7 @@ void tablahash_eliminar(TablaHash tabla, void *dato) {
     tabla->numElems--;
     tabla->destr(tabla->elems[idx].dato);
     tabla->elems[idx].dato = NULL;
+    tabla->factorCarga = tablahash_factorcarga(tabla);
     return;
   }
 
@@ -179,6 +190,7 @@ void tablahash_eliminar(TablaHash tabla, void *dato) {
       tabla->numElems--;
       tabla->destr(tabla->elems[i].dato);
       tabla->elems[i].dato = NULL;
+      tabla->factorCarga = tablahash_factorcarga(tabla);
       return;
     }
     i++;

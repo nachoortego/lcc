@@ -2,8 +2,8 @@
 Def FRP
 Def Potencia de FRP y demostrar que es FRP
 Def Ackerman X y demostrar que no es FRP. Explicar importancia del resultado
-Cuándo una FRL representa una función numérica?
-Demostrar que FR tiene el mismo poder de cálculo que FRL
+  Cuándo una FRL representa una función numérica ? 
+  Demostrar que FR tiene el mismo poder de cálculo que FRL
 Definir gramática y lenguaje de tipo 1
 Demostrar que L3 está contenido estricto en L2
 Lema de bombeo de autómatas finitos
