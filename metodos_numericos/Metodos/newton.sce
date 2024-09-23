@@ -16,6 +16,7 @@ function salida = newton_v1(fun,x0,tol,iter)
   end
 
   disp(i)
+  disp(x1)
   salida = x1;
 endfunction
   
@@ -25,15 +26,14 @@ function salida = newton(fun,x0,tol,iter, h)
   i = 0;
   fx0 = f(x0)
   dfx0 = (f(x0 + h) - fx0) / h
-  x1 = x0 - fx0 * dfx0
-  delta = abs(x1-x0)
+  x1 = x0 - fx0 / dfx0
 
-  while delta > tol && i < iter
+  while abs(x1 - x0) > tol && i < iter
     i = i+1;
     x0 = x1
     fx0 = f(x0)
-    dfx0 = f(x0 + h) - fx0
-    x1 = x0 - f(x0) * h / dfx0
+    dfx0 = (f(x0 + h) - fx0) / h
+    x1 = x0 - f(x0) / dfx0
   end
 
   if(abs(x1 - x0) > tol) then 
@@ -41,8 +41,9 @@ function salida = newton(fun,x0,tol,iter, h)
   end
 
   disp(i)
+  disp(x1)
   salida = x1;
 endfunction
 
-// newton("x**2-2", 1, 0.0001, 100)
-// newton("x**2-2", 1, 0.0001, 100, 0.000000001)
+newton_v1("x**2-2", 1, 0.00001, 100)
+newton("x**2-2", 1, 0.00001, 100, 0.000000001)
