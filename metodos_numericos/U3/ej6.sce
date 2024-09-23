@@ -1,4 +1,3 @@
-// CTD
 function salida = puntofijo(fun, x0, iter, tol)
   deff("y=f(x)", "y="+fun)
   x1 = f(x0)
@@ -11,13 +10,14 @@ function salida = puntofijo(fun, x0, iter, tol)
     delta = abs(x1 - x0)
     i = i + 1
   end
-  if delta > tol then
+  if delta > tol
     disp("Se alcanzo la cantidad maxima de iteraciones")
   end
-  disp("Resultado: " + x1)
-  disp("Iteraciones: " + i)
+
+  disp(i)
+  disp(x1)
   salida = x1
 endfunction
   
-// exec ("main.sce", -1)
-puntofijo("cos(x)", 18, 100, 0.000001)
+funcprot(0)
+puntofijo("log(3*x)", 1, 100, 0.0001)

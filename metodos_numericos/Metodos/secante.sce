@@ -12,7 +12,7 @@ function raiz = metodo_secante(fun, x0, x1, tolerancia, iter)
   i = 0
   raiz = x1 - f(x1) * (x1 - x0) / (f(x1) - f(x0))
   
-  while abs(raiz - x1) > tolerancia && i <= iter
+  while abs(raiz - x1) > tolerancia && i < iter
     i = i + 1
     x0 = x1
     x1 = raiz
@@ -23,7 +23,8 @@ function raiz = metodo_secante(fun, x0, x1, tolerancia, iter)
     disp("Se alcanzo el maximo de iteraciones") 
   end
 
-  disp(raiz)
+  disp("Cantidad de iteraciones: " + string(i))
+  disp("Resultado: " + string(raiz))
   
 endfunction
   
