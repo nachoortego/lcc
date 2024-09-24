@@ -1,33 +1,34 @@
-function salida = falsa_posicion(fun,a,b,tol,iter)
-  deff("y=f(x)","y="+fun)
+function raiz = falsa_posicion(fun, a, b, tol, iter)
+	deff("y=f(x)","y="+fun)
 
-  for i = 0:iter
-    a1 = a
-    b1 = b
+    if f(a) * f(b) >= 0 then
+        disp("Error: f(a) y f(b) deben tener signos opuestos.");
+        return;
+    end
 
-    for j = 0:iter
-      c = (a + b) / 2
-      if (b - c) <= tol then
-        break
-      else
-        if f(b) * f(c) < 0 then
-          a = c
-        else
-          b = c
+    // Variables iniciales
+    i = 0;
+    while i < iter do
+        c = b - (f(b) * (b - a)) / (f(b) - f(a));
+        
+        f_c = f(c);
+        
+        if abs(f_c) < tol then
+            root = c;
+            return;
         end
-      end
+        
+        if f(a) * f_c < 0 then
+            b = c;
+        else
+            a = c;
+        end
+        i = i + 1;
     end
 
-    if f(a)*f(c) < 0 then
-      a = a1
-      b = c
-    elseif f(b)*f(c) < 0 then
-      a = c
-      b = b1
-    else
-      salida = c
-      break
-    end
-  end
-  
+	disp(i)
+	disp(c)
+	raiz = c
 endfunction
+
+falsa_posicion("x^3 - x - 2",1,2,0.001,100)

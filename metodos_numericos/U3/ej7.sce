@@ -19,11 +19,11 @@ endfunction
 function F = fun(v)
     x = v(1);
     y = v(2);
-    F = [1 + x^2 - y^2 + (%e^x)*cos(y) ; 2*x*y + (%e^x)*sin(y)];
+    F = [1 + x^2 - y^2 + exp(x)*cos(y) ; 2*x*y + exp(x)*sin(y)];
 endfunction
 
 // Punto inicial
 x0 = [-1; 4]
 
 // Llama a Newton multivariable
-solucion = newton_multivariable(fun, x0, 0.000001, 100);
+solucion = newton_multivariable(fun, x0, 0.000001, 10);

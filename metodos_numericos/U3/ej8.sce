@@ -29,4 +29,20 @@ x0_c = [-1.2; -2.5]
 x0_d = [2; -2.5]
 
 // Llama a Newton multivariable
+disp("SOLUCIONES: ")
+solucion = newton_multivariable(fun, x0_a, 0.000001, 100);
+printf("\n");
+solucion = newton_multivariable(fun, x0_b, 0.000001, 100);
+printf("\n");
+solucion = newton_multivariable(fun, x0_c, 0.000001, 100);
+printf("\n");
 solucion = newton_multivariable(fun, x0_d, 0.000001, 100);
+printf("\n");
+
+
+disp("EVALUACIONES: ")
+disp(fun([1.336355369365182,1.754235198595021]))
+printf("\n");
+disp(fun([-0.901266190807440,-2.08658759470003]))
+printf("\n");
+disp(fun([-3.001624886676717,0.148107994958387]))

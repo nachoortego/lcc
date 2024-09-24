@@ -29,6 +29,3 @@ function raiz = metodo_secante(fun, x0, x1, tolerancia, iter)
 endfunction
   
 metodo_secante("2*sin(x)-x**2",-2,3,0.001,1000)
-  
-  
-biseccion("2**x-2*x",1,1.5,0.001,100) // aplicar newton en este intervalo

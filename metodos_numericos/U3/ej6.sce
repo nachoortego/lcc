@@ -1,3 +1,11 @@
+function grafica()
+  x = -5:0.001:5;
+  clf;
+  f = exp(x)./3;
+  plot(x, f);
+  plot(x, x);
+endfunction
+
 function salida = puntofijo(fun, x0, iter, tol)
   deff("y=f(x)", "y="+fun)
   x1 = f(x0)
@@ -18,6 +26,7 @@ function salida = puntofijo(fun, x0, iter, tol)
   disp(x1)
   salida = x1
 endfunction
-  
+
 funcprot(0)
-puntofijo("log(3*x)", 1, 100, 0.0001)
+grafica()
+puntofijo("exp(x)/3", 1.513, 100, 0.0001)

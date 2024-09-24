@@ -14,8 +14,8 @@ function salida = puntofijo(fun, x0, iter, tol)
   if delta > tol then
     disp("Se alcanzo la cantidad maxima de iteraciones")
   end
-  disp("Resultado: " + x1)
-  disp("Iteraciones: " + i)
+  disp("Resultado: " + string(x1))
+  disp("Iteraciones: " + string(i))
   salida = x1
 endfunction
   

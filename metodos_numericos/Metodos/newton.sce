@@ -19,7 +19,7 @@ function salida = newton_v1(fun,x0,tol,iter)
   disp(x1)
   salida = x1;
 endfunction
-  
+
 
 function salida = newton(fun,x0,tol,iter, h)
   deff("y=f(x)","y="+fun)
