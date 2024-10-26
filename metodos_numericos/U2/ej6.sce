@@ -14,8 +14,13 @@ function y = taylor(f,n,x,a)
   end
 endfunction
 
-function y = sqr(x)
-  y = x^2
+function y = exp(x)
+  y = %e^x
 endfunction
 
-disp(taylor(sqr, 10, 2, 4))
+function y = inv_exp(x)
+  y = 1/(%e^x)
+endfunction
+
+disp(taylor(exp, 10, -2, 1))
+disp(taylor(inv_exp, 10, 2, 1))
