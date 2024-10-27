@@ -42,21 +42,36 @@ ind = 1
 
 endfunction
 
-A = [4 1 1; 8 2 2; 1 2 3]
+// Item A
 
-[U,ind] = cholesky(A)
-disp(U)
-disp(ind)
+A = [
+16 -12 8
+-12 18 -6
+8 -6 8
+]
+
+b = [
+76
+-66
+46
+]
+
+// Aplicamos cholesky a A
+[U, ind] = cholesky(A)
+
+L = U' // calculamos L
+
+y = L\b
+x = U\y
+
+disp([U y])
+disp(x)
 
 
-B = [5 2 1 0; 2 5 2 0; 1 2 5 2; 0 0 2 5]
-disp(B)
-[U,ind] = cholesky(B)
-disp(U)
-disp(ind)
+// Item B
 
-C = [5 2 1 0; 2 -4 2 0; 1 2 2 2; 0 0 2 5]
-disp(C)
-[U,ind] = cholesky(C)
+
+
+
 
 

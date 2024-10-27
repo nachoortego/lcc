@@ -42,21 +42,43 @@ ind = 1
 
 endfunction
 
-A = [4 1 1; 8 2 2; 1 2 3]
+a = [
+16 -12 8 -16
+-12 18 -6 9
+8 -6 5 -10
+-16 9 -10 46
+]
+
+b = [
+4 1 1
+8 2 2
+1 2 3
+]
+
+c = [
+1 2
+2 4
+]
+
+A = a
 
 [U,ind] = cholesky(A)
-disp(U)
+
 disp(ind)
-
-
-B = [5 2 1 0; 2 5 2 0; 1 2 5 2; 0 0 2 5]
-disp(B)
-[U,ind] = cholesky(B)
 disp(U)
-disp(ind)
 
-C = [5 2 1 0; 2 -4 2 0; 1 2 2 2; 0 0 2 5]
-disp(C)
-[U,ind] = cholesky(C)
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
