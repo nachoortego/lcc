@@ -19,7 +19,7 @@ disp(A)
 printf("\n")
 disp(b)
 printf("\n")
-disp(l(1), l(2))
+disp(l)
 printf("\n")
 
 // Triangular inferior
@@ -32,10 +32,11 @@ function s1 = remonte_inf(A, b)
     s1 = x
 endfunction
 
-A = [ 1  0 ;
-      2 1 ; ]
+A = [ 1  0  0;
+      2  1  0;
+	  3  1  2 ]
 
-b = [ 2 1 ]
+b = [ 2 1 0 ]
 
 l = remonte_inf(A,b)
 

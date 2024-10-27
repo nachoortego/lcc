@@ -18,17 +18,11 @@ a = [A b]; // Matriz aumentada
 count = 0
 // Eliminación progresiva
 n = nA;
-for k=1:n-1
-    for i=k+1:n
-        for j=k+1:n+1
-            a(i,j) = a(i,j) - a(k,j)*a(i,k)/a(k,k);
-            count = count + 1
-        end;
-        for j=1:k        // no hace falta para calcular la solución x
-            a(i,j) = 0;  // no hace falta para calcular la solución x
-        end              // no hace falta para calcular la solución x
-    end;
+for k = 1:n-1
+	a(k+1:n, k+1:n+1) = a(k+1:n, k+1:n+1) - a(k+1:n, k) * a(k, k+1:n+1) / a(k, k);
+	a(k+1:n,1:k) = 0
 end;
+
 
 // Sustitución regresiva
 x(n) = a(n,n+1)/a(n,n);
@@ -51,6 +45,7 @@ b = [0 6 -1]'
 A = [1 1 0 3; 2 1 -1 1; 3 -1 -1 2; -1 2 3 -1]
 b = [4 1 -3 4]'
 
+disp([A b])
 [x,a] = gausselim(A,b)
 disp(x)
 disp(a)
