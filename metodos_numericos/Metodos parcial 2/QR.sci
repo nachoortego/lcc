@@ -15,19 +15,3 @@ function [Q, R] = qrFactorization(A)
         Q(:, k) = v / R(k, k);
     end
 endfunction
-
-
-A = [1, 1, 1;
-     1, 2, 3;
-     1, 3, 6];
-
-[Q, R] = qrFactorization(A);
-
-
-disp("Matriz Q:");
-disp(Q);
-disp("Matriz R:");
-disp(R);
-
-disp("Verificación: Q * R:");
-disp(Q * R);
