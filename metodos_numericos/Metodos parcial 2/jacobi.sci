@@ -7,10 +7,8 @@ function x = jacobi(A,b,x0,eps)
     x = x0
     xk = x
     cont = 0
-    
-    
-    
-    while (norm(x-xk) > eps || cont == 0 ) // sacar abs, norm > 0
+
+    while norm(x-xk) > eps || cont == 0
         xk = x
         for i = 1:n
             suma = 0
@@ -21,7 +19,7 @@ function x = jacobi(A,b,x0,eps)
             end
             x(i) = 1/A(i,i)*(b(i) - suma)
         end
-    cont = cont + 1
+        cont = cont + 1
     end
     disp(cont);
 endfunction

@@ -1,4 +1,8 @@
 
+
+
+
+
 function x = SOR(A,b,x0,iter,tol,w)
     n = size(A,1)
     x = x0
