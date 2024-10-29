@@ -1,0 +1,34 @@
+function [Q, R] = qrFactorization(A)
+    [m, n] = size(A);  
+    Q = zeros(m, n);
+    R = zeros(n, n);
+
+    for k = 1:n
+        // Paso 1: Calcular ν_k = ||a_k - sum_{i=1}^{k-1} (a_k^T q_i) q_i||
+
+        for i = 1:k-1
+            R(i, k) = Q(:, i)' * A(:, k);  // Producto interno a_k^T q_i
+            v = A(:, k) - R(i, k) * Q(:, i);     // Resta de la proyección
+        end
+
+        R(k, k) = norm(v);  // ν_k = ||v|| (norma de v)
+        Q(:, k) = v / R(k, k);  // Normalizamos q_k
+    end
+endfunction
+
+
+A = [1, 1, 1;
+     1, 2, 3;
+     1, 3, 6];
+
+[Q, R] = qrFactorization(A);
+
+
+disp("Matriz Q:");
+disp(Q);
+disp("Matriz R:");
+disp(R);
+
+disp("Verificación: Q * R:");
+disp(Q * R);
+
