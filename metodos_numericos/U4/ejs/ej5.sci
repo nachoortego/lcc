@@ -30,7 +30,7 @@ for k=1:n-1
 	a(kpivot,:) = a(k,:); 
 	a(k,:) = temp;
     
-    a(k+1:n, k+1:n+1) = a(k+1:n, k+1:n+1) - a(k+1:n, k) * a(k, k+1:n+1) / a(k, k);
+    a(k+1:n, k+1:n) = a(k+1:n, k+1:n) - a(k+1:n, k) * a(k, k+1:n) / a(k, k);
 	a(k+1:n,1:k) = 0
 end;
 

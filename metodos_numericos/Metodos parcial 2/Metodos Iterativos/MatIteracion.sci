@@ -7,7 +7,6 @@ function M = mat_it_gauss_seidel(A)
 	for i = 1:n
 		N(i,1:i) = A(i,1:i)
 	end
-//	disp(N)
 
 	M = eye(n,n) - inv(N)*A
 endfunction
@@ -23,19 +22,3 @@ function M = mat_it_jacobi(A)
 
 	M = eye(n,n) - inv(N)*A
 endfunction
-
-A = [
-10 -1 2 0
--1 11 -1 3
-2 -1 10 -1
-0 3 -1 8]
-
-b = [ 6 25 -11 15]
-
-
-G = (mat_it_gauss_seidel(A))
-J = (mat_it_jacobi(A))
-
-disp(spec(G))
-disp("_______________________")
-disp(spec(J))

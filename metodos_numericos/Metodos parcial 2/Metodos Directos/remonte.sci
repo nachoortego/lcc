@@ -8,19 +8,6 @@ function s1 = remonte(A, b)
     s1 = x
 endfunction
 
-A = [ 1  2 ;
-      0 1 ; ]
-
-b = [ 0 1 ]
-
-l = remonte(A,b)
-disp("Triangular Superior")
-disp(A)
-printf("\n")
-disp(b)
-printf("\n")
-disp(l)
-printf("\n")
 
 // Triangular inferior
 function s1 = remonte_inf(A, b)
@@ -31,19 +18,4 @@ function s1 = remonte_inf(A, b)
     end
     s1 = x
 endfunction
-
-A = [ 1  0  0;
-      2  1  0;
-      3  1  2 ]
-
-b = [ 2 1 0 ]
-
-l = remonte_inf(A,b)
-
-disp("Triangular inferior")
-disp(A)
-printf("\n")
-disp(b)
-printf("\n")
-disp(l(1), l(2))
 

@@ -2,19 +2,20 @@
 // xi^{k+1} =
 // 1 / aii (bi - sum_{j=1, j/=i}^{n} aij * xj^{k} )
 
-function x = jacobi(A,b,x0,eps)
+
+function x = jacobi(A,b,x0,eps,max_iter)
     n = size(A,1)
     x = x0
     xk = x
     cont = 0
 
-    while norm(x-xk) > eps || cont == 0
+    while (norm(x-xk) > eps || cont == 0) && cont < max_iter
         xk = x
         for i = 1:n
             suma = 0
             for j = 1:n
-                if (j <> i)
-                    suma = suma + A(i,j) * xk(j)
+                if (i <> j)
+                    suma = suma + A(i,j)*xk(j)
                 end
             end
             x(i) = 1/A(i,i)*(b(i) - suma)
@@ -36,7 +37,7 @@ b = [0 0.375 0]
 
 b1 = [0 1 0]
 
-x = jacobi(B, b1, [0 0 0], 0.01)
+x = jacobi(B, b1, [0 0 0], 0.01,500)
 
 disp(x)
 

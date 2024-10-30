@@ -30,12 +30,13 @@ for k=1:n-1
 	a(kpivot,:) = a(k,:); 
 	a(k,:) = temp;
     
+	// Eliminacion progresiva
     a(k+1:n, k+1:n+1) = a(k+1:n, k+1:n+1) - a(k+1:n, k) * a(k, k+1:n+1) / a(k, k);
 	a(k+1:n,1:k) = 0
 end;
 
 // Sustitución regresiva
-    x = zeros(n, 1);
+//    x = zeros(n, 1);
     x(n) = a(n, n+1) / a(n, n);
     for i = n-1:-1:1
         x(i) = (a(i, n+1) - a(i, i+1:n) * x(i+1:n)) / a(i, i);

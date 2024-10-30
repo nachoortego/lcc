@@ -3,25 +3,24 @@
 //                      - sum_{j=i+1}^{n} aij xj^{k}
 //                  )
 
-function x = gauss(A,b,x0,eps)
-    n = size(A,1);
-    x = x0;
-    xk = x;
-    suma = 0;
-    cont = 0;
+function x = gauss(A,b,x0,eps,max_iter)
+    n = size(A,1)
+    x = x0
+    xk = x
+    cont = 0
 
-    while (abs(norm(x-xk))> eps || cont == 0)
+    while (norm(x-xk) > eps || cont == 0) && cont < max_iter
         xk = x
-        for i=1:n
+        for i = 1:n
             suma = 0
             for j = 1:n
-                if (i<>j)
+                if (i <> j)
                     suma = suma + A(i,j)*x(j)
                 end
             end
-            x(i) = 1/A(i,i)*(b(i)-suma)
+            x(i) = 1/A(i,i)*(b(i) - suma)
         end
-        cont = cont+1
+        cont = cont + 1
     end
     disp(cont);
 endfunction
@@ -38,7 +37,7 @@ b = [0 0.375 0]
 
 b1 = [0 1 0]
 
-x = gauss(B, b1, [0 0 0], 0.01)
+x = gauss(B, b1, [0 0 0], 0.01,500)
 
 disp(x)
 

@@ -16,6 +16,7 @@ end;
 
 a = [A b]; // Matriz aumentada
 count = 0
+
 // Eliminación progresiva
 n = nA;
 for k = 1:n-1

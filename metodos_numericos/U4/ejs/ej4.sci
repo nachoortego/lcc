@@ -1,13 +1,11 @@
 function [s1, s2] = gauss(A, b)
 	a = size(A)
 	n = a(1)
-	for i = 1:(n-1)
-		for j = (i+1):a(1)
-			mjk = A(j,i)/A(i,i)
-			A(j,i)=0
-			A(j,i+1:n) = A(j,i+1:n) - mjk*A(i,i+1:n)
-			b(j) = b(j) - mjk*b(i)
-		end
+	for k = 1:(n-1)
+		mjk = A(k+1:n,k)/A(k,k)
+		A(k+1:n,k)=0
+		A(k+1:n,k+1:n) = A(k+1:n,k+1:n) - mjk*A(k,k+1:n)
+		b(k+1:n) = b(k+1:n) - mjk*b(k)
 	end
 	s1 = A
 	s2 = b

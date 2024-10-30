@@ -7,7 +7,6 @@ function M = mat_it_gauss_seidel(A)
 	for i = 1:n
 		N(i,1:i) = A(i,1:i)
 	end
-//	disp(N)
 
 	M = eye(n,n) - inv(N)*A
 endfunction
