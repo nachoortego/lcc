@@ -1,6 +1,6 @@
 // Ejercicio 5 de la Práctica 5
-clc()
-clear()
+//clc()
+//clear()
 
 // SOR
 function [x0,iter] = SOR(w,tol)

@@ -5,7 +5,7 @@ n = size(A,1)
 U = zeros(n,n)
 for k = 1:n
     if k==1 then
-    	t = A(k,k)
+		t = A(k,k)
     else 
         t = A(k,k) - U(1:k-1,k)'*U(1:k-1,k)
     end

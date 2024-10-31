@@ -22,3 +22,18 @@ function M = mat_it_jacobi(A)
 
 	M = eye(n,n) - inv(N)*A
 endfunction
+
+A = [1 -1  0  ;
+     -1 2 -1 ;
+     0 -1 1.1 ;]
+
+M = mat_it_jacobi(A)
+
+disp(M)
+disp(norm(M))
+
+if norm(M) < 1
+	disp("converge")
+else
+	disp("no converge")
+end

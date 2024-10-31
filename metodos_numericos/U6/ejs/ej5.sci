@@ -10,7 +10,6 @@ function [valor,zn,iter]=mpotencia(A,z0,eps,maxiter)
         if (iter <> 1)
 			z0 = zn;
 		end
-
         w = A*z0;
         zn = w / norm(w,%inf)
         [m,j] = max(abs(w));
@@ -20,7 +19,7 @@ function [valor,zn,iter]=mpotencia(A,z0,eps,maxiter)
         iter = iter +1;
     end
 
-    disp("Iteraciones",iter);    
+    disp("Iteraciones",iter);
 endfunction
 
 A = [12 1 3 4

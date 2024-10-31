@@ -53,3 +53,4 @@ F = [
 //gres(A)
 
 disp(spec(E))
+gres(A)
