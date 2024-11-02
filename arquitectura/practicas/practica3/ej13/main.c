@@ -14,4 +14,4 @@ int main(void)
 }
 
 // Ejecutar con
-// $ gcc fact1.s fact2.s main.c
+// $ gcc -Wall -Werror -no-pie fact1.s fact2.s main.c
