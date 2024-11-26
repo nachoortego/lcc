@@ -57,7 +57,7 @@ endfunction
 
 // - Ejercicio 11 - //
 
-n= 10 // grado
+n = 10 // grado
 nodos_cheby = roots_Cheby_ab(n+1,0,%pi/2) // nodos = grado + 1
 nodos_equidist = 0:%pi/(2*n):%pi/2
 
@@ -69,7 +69,7 @@ xx = 0:0.01:(%pi/2)
 
 er_cheby = cos(xx) - horner(p_cheby,xx)
 er_equidist = cos(xx) - horner(p_equidist,xx)
-plot2d(xx,[er_cheby' er_equidist'], leg="Cheby@equidist")
+plot2d(xx,[er_cheby' er_equidist'],[2,5], leg="Cheby@equidist")
 a=gca()
 a.x_location = "origin"
 a.y_location = "origin"
