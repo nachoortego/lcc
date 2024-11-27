@@ -3,9 +3,9 @@ clear()
 
 // Aproximación polinomial de mínimos cuadrados para matrices con rango completo
 function [p,err] = MinCuad_pol(A,b)
-    [a A_amp] = gausselimPP((A')*A,(A')*(b'))
+    [a,A_amp] = gausselimPP((A')*A,(A')*(b'))
     p = poly(a,"x","coeff")
-    err = norm(A*a-(b'))o u
+    err = norm(A*a-(b'))
 endfunction
 
 // Matriz del métoodo de mínimo cuadrados polinomial
@@ -14,7 +14,7 @@ function A = A_mc(x,grado)
     m = length(x)
     A = ones(m,1)
     for j=2:(grado+1)
-        A = [A (x').^(j-1)]
+        A = [A,(x').^(j-1)]
     end
 endfunction
 
@@ -29,7 +29,7 @@ for k=1:n-1
     kpivot = k; amax = abs(a(k,k));
     for i=k+1:n
         if abs(a(i,k))>amax then
-            kpivot = i; am ax = a(i,k);
+            kpivot = i; amax = a(i,k);
         end;
     end;
     temp = a(kpivot,:); a(kpivot,:) = a(k,:);
@@ -57,26 +57,19 @@ end
 
 endfunction
 
-x = [ 0 0.15 0.31 0.5 0.6 0.75 ]
-y = [ 1 1.004 1.31 1.117 1.223 1.422 ]
+x=[4,4.2,4.5,4.7,5.1,5.5,5.9,6.3,6.8,7.1]
+y=[102.56,113.18,130.11,142.05,167.53,195.14,224.87,256.73,299.5,326.72]
 
-// Grado 1
-A = A_mc(x,1)
-[p,err] = MinCuad_pol(A,y)
-disp(err)
-disp(p)
-
-// Grado 2
-A = A_mc(x,2)
-[p,err] = MinCuad_pol(A,y)
-disp(err)
-disp(p)
-
-// Grado 3
 A = A_mc(x,3)
-[p,err] = MinCuad_pol(A,y)
-disp(err)
-disp(p)
+deter = det((A')*A)
+disp("La matriz A del método tiene rango completo, pues: det(A^T*A) = "+string(deter))
+[p3,err3] = MinCuad_pol(A,y)
 
 
+xx=4:0.001:7.2
+plot2d(x',y,-1)
+plot2d(xx',[horner(p3,xx')],[4],leg="p(x)")
+a=gca();
+a.x_location = "origin";
+a.y_location = "origin";
 

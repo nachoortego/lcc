@@ -27,11 +27,11 @@ function v=DobleTn(f,a,b,c,d,n,m)
     deff("z=fxb(y)","z=f("+string(b)+",y)")
     v = Tn(fxa,c(a),d(a),m)/2+Tn(fxb,c(b),d(b),m)/2
     for i=1:n-1
-        xi = a+i*h;
-        deff("z=fxi(y)","z=f("+string(xi)+",y)");
-        v = v + Tn(fxi,c(xi),d(xi),m);
+        xi = a+i*h
+        deff("z=fxi(y)","z=f("+string(xi)+",y)")
+        v = v + Tn(fxi,c(xi),d(xi),m)
     end
-    v = h*v;
+    v = h*v
 endfunction
 
 function y=zero(x)
@@ -40,14 +40,6 @@ endfunction
 
 function z=uno(x,y)
          z= 1
-endfunction
-
-function y=cx1(x)
-    y = -sqrt(2*x-x^2)
-endfunction
-
-function y=dx1(x)
-    y = sqrt(2*x-x^2)
 endfunction
 
 function w = f(x,y) 

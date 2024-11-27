@@ -25,7 +25,7 @@ endfunction
 x2=[0,0.2,0.4,0.6]
 y2=[1,1.2214,1.4918,1.8221]
 
-cubica = interpolLagrange(x2,y2)
+cubica = DD_newton(x2,y2)
 rango = [-2:0.01:2]
 
 plot(rango,horner(cubica,rango),"b")

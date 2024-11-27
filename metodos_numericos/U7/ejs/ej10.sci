@@ -50,6 +50,7 @@ endfunction
 w = roots_Cheby(4)
 y = %e.^w
 p = DD_Newton(w,y)
+disp(p)
 
 subplot(121)
 xx = -1:0.01:1
