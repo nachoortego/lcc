@@ -5,14 +5,13 @@
 Creo que con rotaciones se puede
 
 #### b) 0x12340000
-Con rotaciones se puede
+Se puede con un mov
 
 #### c) 0x77777777
 Hay que usar literal pool o MOVW, MOVT
 
 #### d) 0xFFFFFFFF
-Hay que usar literal pool o MOVW, MOVT
+Se puede con mov negado
 
 #### e) 0xFFFFFFFE
-Hay que usar literal pool o MOVW, MOVT
-
+Se puede con mov negdo
