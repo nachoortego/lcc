@@ -14,22 +14,27 @@ main:
   PUSH {lr}
 
   EOR r4, r4, r4 @ i = 0
-  LDR v1, =a @ v1 = a
-  LDR v2, =b @ v2 = b
-  LDR v3, =c @ v3 = c
+  LDR r1, =a @ r1 = a
+  LDR r2, =b @ r2 = b
+  LDR r3, =c @ r3 = c
 
 for_loop:
   CMP r4, #5 @ i < 5
 
-  VLDR s1, [v1, r4, LSL #2] @ s1 = a[i]
-  VLDR s2, [v2, r4, LSL #2] @ s2 = b[i]
-  VLDR s3, [v3, r4, LSL #2] @ s3 = c[i]
+  ADD r5, r1, r4, LSL #2 @ r5 = [ a[i] ]
+  VLDR s1, [r5] @ s1 = a[i]
+
+  ADD r5, r2, r4, LSL #2 @ r5 = [ b[i] ]
+  VLDR s2, [r5] @ s2 = b[i]
+
+  ADD r5, r3, r4, LSL #2 @ r5 = [ c[i] ]
+  VLDR s3, [r5] @ s3 = c[i]
 
   VADD.F32 s3, s3, s1 @ c[i] += a[i]
   VADD.F32 s3, s3, s2 @ c[i] += b[i]
 
   LDR r0, =format1
-  LDR r2, [v3, r4, LSL #2] @ r2 = c[i]
+  LDR r2, [r3, r4, LSL #2] @ r2 = c[i]
   BL printf
 
   VADD.F32 s0, s0, s3 @ suma += c[i]
