@@ -1,16 +1,17 @@
 .arch armv7-a
 .fpu vfpv3
 
+.data
+format: .asciz "El determinante es: %f\n"
+
 .global main
 .text
 determinante:
   @ a = s0, b = s1, c = s2, d = s3 
-  PUSH {lr}
   VMUL.F32 s0, s0, s3 @ a*d
   VMUL.F32 s1, s1, s2 @ b*c
   VSUB.F32 s0, s0, s1 @ a*d - b*c
 
-  POP {lr}
   BX lr
 main:
   PUSH {lr}
@@ -22,6 +23,12 @@ main:
 
   BL determinante
 
+  VCVT.F64.F32 d1, s0 
+  VMOV r2, r3, d1
+  LDR r0, =format
+  BL printf
+
+  MOV r0, #0
   POP {lr}
   BX lr
 
