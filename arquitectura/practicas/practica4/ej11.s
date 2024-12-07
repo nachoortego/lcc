@@ -24,7 +24,7 @@ main:
   BL determinante
 
   VCVT.F64.F32 d1, s0 
-  VMOV r2, r3, d1
+  VMOV r1, r2, d1
   LDR r0, =format
   BL printf
 
