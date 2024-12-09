@@ -20,6 +20,9 @@ main:
   LDR r8, =c @ r8 = c
 
 for_loop:
+  MOV r8, #0
+  VMOV s0, r8
+
   ADD r5, r6, r4, LSL #2 @ r5 = [ a[i] ]
   VLDR s1, [r5] @ s1 = a[i]
 
@@ -28,16 +31,15 @@ for_loop:
 
   VADD.F32 s0, s0, s1 @ c[i] += a[i]
   VADD.F32 s0, s0, s2 @ c[i] += b[i]
+  VADD.F32 s3, s3, s0 @ suma += c[i]
 
   LDR r0, =format1
   VCVT.F64.F32 d1, s0 
   VMOV r1, r2, d1
   BL printf
 
-  VADD.F32 s3, s3, s0 @ suma += c[i]
-
-  CMP r4, #5 @ i < 5
   ADD r4, r4, #1 @ i++
+  CMP r4, #5 @ i < 5
   BLT for_loop @ Si i < 5, sigue en el loop
 
 
