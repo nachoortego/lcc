@@ -14,37 +14,36 @@ main:
   PUSH {lr}
 
   EOR r4, r4, r4 @ i = 0
+  EOR r5, r5, r5 @ i = 0
   LDR r6, =a @ r6 = a
   LDR r7, =b @ r7 = b
   LDR r8, =c @ r8 = c
 
 for_loop:
-  CMP r4, #5 @ i < 5
-
   ADD r5, r6, r4, LSL #2 @ r5 = [ a[i] ]
   VLDR s1, [r5] @ s1 = a[i]
 
   ADD r5, r7, r4, LSL #2 @ r5 = [ b[i] ]
   VLDR s2, [r5] @ s2 = b[i]
 
-  ADD r5, r8, r4, LSL #2 @ r5 = [ c[i] ]
-  VLDR s3, [r5] @ s3 = c[i]
-
-  VADD.F32 s3, s3, s1 @ c[i] += a[i]
-  VADD.F32 s3, s3, s2 @ c[i] += b[i]
+  VADD.F32 s0, s0, s1 @ c[i] += a[i]
+  VADD.F32 s0, s0, s2 @ c[i] += b[i]
 
   LDR r0, =format1
-  LDR r7, [r8, r4, LSL #2] @ r7 = c[i]
+  VCVT.F64.F32 d1, s0 
+  VMOV r1, r2, d1
   BL printf
 
-  VADD.F32 s0, s0, s3 @ suma += c[i]
+  VADD.F32 s3, s3, s0 @ suma += c[i]
 
+  CMP r4, #5 @ i < 5
   ADD r4, r4, #1 @ i++
   BLT for_loop @ Si i < 5, sigue en el loop
 
 
   LDR r0, =format2
-  VMOV r6, s0 @ r6 = suma
+  VCVT.F64.F32 d1, s3 
+  VMOV r1, r2, d1
   BL printf
 
   POP {lr}
