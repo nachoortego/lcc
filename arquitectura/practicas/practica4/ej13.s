@@ -31,7 +31,7 @@ for_loop:
 
   VADD.F32 s0, s0, s1 @ c[i] += a[i]
   VADD.F32 s0, s0, s2 @ c[i] += b[i]
-  VADD.F32 s3, s3, s0 @ suma += c[i]
+  VADD.F32 s20, s20, s0 @ suma += c[i]
 
   LDR r0, =format1
   VCVT.F64.F32 d1, s0 
@@ -44,7 +44,7 @@ for_loop:
 
 
   LDR r0, =format2
-  VCVT.F64.F32 d1, s3 
+  VCVT.F64.F32 d1, s20 
   VMOV r1, r2, d1
   BL printf
 
