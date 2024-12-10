@@ -4,15 +4,19 @@
 .data
 a: .float 4095.0
 b: .float 80.0
+three: .float 3.0
 format: .asciz "El resultado es: %f\n"
 
 .text
 .global main
+
 promedio:
-  VADD.F32 s0, s0, s1 
+  VADD.F32 s0, s0, s1
   VADD.F32 s0, s0, s2
-  @ VMOV s4, #3
-  @ VDIV.F32 s0, s0, s4
+  LDR r0, =three
+  VLDR.F32 s3, [r0]
+  VDIV.F32 s0, s0, s3  @ Dividir s0 por s3
+  BX lr
 main:
   PUSH {lr}
 
@@ -24,7 +28,7 @@ main:
 
   BL promedio
 
-  VCVT.F64.F32 d1, s0 
+  VCVT.F64.F32 d1, s0
   VMOV r1, r2, d1
   LDR r0, =format
   BL printf
