@@ -4,7 +4,6 @@
 .data
 a: .float 4095.0
 b: .float 80.0
-three: .float 3.0
 format: .asciz "El resultado es: %f\n"
 
 .text
@@ -13,8 +12,9 @@ format: .asciz "El resultado es: %f\n"
 promedio:
   VADD.F32 s0, s0, s1
   VADD.F32 s0, s0, s2
-  LDR r0, =three
-  VLDR.F32 s3, [r0]
+  MOV r0, #3
+  VMOV s3, r0
+  VCVT.F32.S32 s3, s3
   VDIV.F32 s0, s0, s3  @ Dividir s0 por s3
   BX lr
 main:

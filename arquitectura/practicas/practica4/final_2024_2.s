@@ -14,25 +14,24 @@ calculo:
   LDR r4, [sp]
 
   CMP r0, #0
-  BLLS foo
-  BLS end_calculo
+  BLLE foo
   CMP r1, #0
-  BLLS foo
-  BLS end_calculo
+  BLLE foo
   CMP r2, #0
-  BLLS foo
-  BLS end_calculo
+  BLLE foo
   CMP r3, #0
-  BLLS foo
-  BLS end_calculo
+  BLLE foo
   CMP r4, #0
-  BLLS foo
-  BLS end_calculo
+  BLLE foo
 
   ADD r0, r1
   ADD r0, r2
   ADD r0, r3
   ADD r0, r4
+
+  MOV r1, r0
+  LDR r0, =f_calc
+  BL printf
 
 end_calculo:
 BX lr
@@ -54,7 +53,7 @@ main:
   MOV r1, #2
   MOV r2, #3
   MOV r3, #4
-
+  
   BL calculo
 
   POP {lr}
