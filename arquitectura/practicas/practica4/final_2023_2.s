@@ -10,13 +10,12 @@ main:
   
   MOV r0, #1  @ a = 1
   MOV r1, #2  @ b = 2
-  MOV r2, #10  @ c = 3
+  MOV r2, #3  @ c = 3
   LDR r3, =d    @ Carga la dirección de d en r3
   LDR r3, [r3]  @ Carga el valor contenido en esa dirección en r3
   
-  SUB sp, #4  @ Reserva espacio en la pila
   MOV r4, #5
-  STR r4, [sp]
+  PUSH {r4}
 
   BL suma
 
@@ -24,12 +23,11 @@ main:
   LDR r0, =format
   BL printf
 
-  ADD sp, #4 @ Recupera espacio en la pila
   POP {lr}
   BX lr
 
 suma:
-  LDR r4, [sp]
+  POP {r4}
   LDR r5, =f
   LDR r5, [r5]
 

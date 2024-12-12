@@ -11,7 +11,7 @@ format2: .asciz "La suma de las componentes es: %f\n"
 .text
 .global main
 main:
-  PUSH {lr}
+  PUSH {ip, lr}
 
   EOR r4, r4, r4 @ i = 0
   EOR r5, r5, r5 @ i = 0
@@ -35,7 +35,7 @@ for_loop:
 
   LDR r0, =format1
   VCVT.F64.F32 d1, s0 
-  VMOV r1, r2, d1
+  VMOV r2, r3, d1
   BL printf
 
   ADD r4, r4, #1 @ i++
@@ -45,9 +45,9 @@ for_loop:
 
   LDR r0, =format2
   VCVT.F64.F32 d1, s20 
-  VMOV r1, r2, d1
+  VMOV r2, r3, d1
   BL printf
 
-  POP {lr}
+  POP {ip, lr}
   BX lr
   
