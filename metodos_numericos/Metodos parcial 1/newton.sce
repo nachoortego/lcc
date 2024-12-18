@@ -1,4 +1,4 @@
-// CTD
+ // CTD
 
 function salida = newton_v1(fun,x0,tol,iter)
   deff("y=f(x)","y="+fun)

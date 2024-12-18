@@ -13,7 +13,7 @@ endfunction
 
 function [L, U] = doolittle(A)
     n = size(A,1);
-    L = eye(n, n);7
+    L = eye(n, n);
     U = zeros(n, n);
 
     U(1,:)= A(1,:) // Primera fila de U

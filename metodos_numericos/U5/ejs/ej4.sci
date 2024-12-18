@@ -1,5 +1,5 @@
 //ej4
-N = 100
+N = 6
 A = 8*eye(N,N) + 2*diag(ones(N-1,1),1) + 2*diag(ones(N-1,1),-1)+ diag(ones(N-3,1),3) + diag(ones(N-3,1),-3)
 b = ones(N,1)
 
@@ -29,6 +29,6 @@ function x = gauss(A,b,x0,eps)
     disp(cont);
 endfunction
 
-x = gauss(A, b, zeros(1, 100), 0.000001 )
+x = gauss(A, b, zeros(1, 6), 0.000001 )
 
 disp(x)
