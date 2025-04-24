@@ -130,7 +130,7 @@ CList.
 e) Definir una funci´on concatCL que toma una CList de CList y devuelve la CList con todas ellas concatenadas
 -}
 
-data CList a = EmptyCL | CUnit a | Consnoc a (CList a) a
+data CList a = EmptyCL | CUnit a | Consnoc a (CList a) a deriving Show
 
 headCL :: CList a -> a
 headCL (CUnit a) = a
@@ -160,3 +160,23 @@ snoc :: CList a -> a -> CList a
 snoc EmptyCL x = CUnit x
 snoc (CUnit a) x = Consnoc a EmptyCL x
 snoc (Consnoc a b c) x = Consnoc a (snoc b c) x
+
+reverseCL :: CList a -> CList a
+reverseCL (Consnoc a b c) = Consnoc c (reverseCL b) a
+reverseCL a = a
+
+initsCL :: CList a -> CList (CList a)
+initsCL EmptyCL = CUnit EmptyCL
+initsCL a = snoc (initsCL (reverseCL (tailCL (reverseCL a)))) a
+
+lastsCL :: CList a -> CList (CList a)
+lastsCL EmptyCL = CUnit EmptyCL
+lastsCL a = snoc (lastsCL (tailCL a)) a
+
+concatCL :: CList (CList a) -> CList a
+concatCL EmptyCL = EmptyCL
+concatCL (CUnit a) = a
+concatCL (Consnoc EmptyCL b c) = concatCL (snoc b c)
+concatCL (Consnoc a b c) = cons (headCL a) (concatCL (cons (tailCL a) (snoc b c)))
+
+list = Consnoc (Consnoc 1 (CUnit 2) 3) (Consnoc (CUnit 4) EmptyCL (CUnit 5)) (Consnoc 6 (CUnit 7) 8)
