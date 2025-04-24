@@ -115,7 +115,6 @@ parseRPN s = parseS [] s
 
 {-
 3. Dado el tipo de datos
-data CList a = EmptyCL | CUnit a | Consnoc a (CList a) a
 a) Implementar las operaciones de este tipo algebraico teniendo en cuenta que:
 Las funciones de acceso son headCL, tailCL, isEmptyCL, isCUnit.
 headCL y tailCL no est´an definidos para una lista vac´ıa.
@@ -130,3 +129,34 @@ d) Definir una funci´on lasts que toma una CList y devuelve una CList con todas
 CList.
 e) Definir una funci´on concatCL que toma una CList de CList y devuelve la CList con todas ellas concatenadas
 -}
+
+data CList a = EmptyCL | CUnit a | Consnoc a (CList a) a
+
+headCL :: CList a -> a
+headCL (CUnit a) = a
+headCL (Consnoc l EmptyCL r) = l
+headCL (Consnoc l xs r) = l
+
+tailCL :: CList a -> CList a
+
+tailCL (CUnit a) = EmptyCL
+tailCL (Consnoc l EmptyCL r) = CUnit r
+tailCL (Consnoc l xs r) = Consnoc (headCL xs) (tailCL xs) r
+
+isEmptyCL :: CList a -> Bool
+isEmptyCL EmptyCL = True
+isEmptyCL _ = False
+
+isCUnit :: CList a -> Bool
+isCUnit (CUnit a) = True
+isCUnit _ = False
+
+cons :: a -> CList a -> CList a
+cons x EmptyCL = CUnit x
+cons x (CUnit a) = Consnoc x EmptyCL a 
+cons x (Consnoc a b c) = Consnoc x (cons a b) c
+
+snoc :: CList a -> a -> CList a
+snoc EmptyCL x = CUnit x
+snoc (CUnit a) x = Consnoc a EmptyCL x
+snoc (Consnoc a b c) x = Consnoc a (snoc b c) x
