@@ -123,9 +123,7 @@ void* thread_handler(void* args) {
 
 void wait_for_clients(int lsock) {
   struct epoll_event ev;
-  int csock, nfds, epollfd, n_threads = 5;
-  struct sockaddr addr;
-  socklen_t addrlen;
+  int csock, epollfd, n_threads = 5;
 
   epollfd = epoll_create1(0);
   if (epollfd == -1) {
