@@ -13,7 +13,14 @@ isTreap t = isBinSearch t && isMaxHeap t
               isBinSearch E = True
               isBinSearch (N l _ k r) = k >= key l && k <= key r && isBinSearch l && isBinSearch r
               isMaxHeap E = True
-              isMaxHeap (N l p _ r) = p >= priority r && p >= priority l
+              isMaxHeap (N l p _ r) = p >= priority r && p >= priority l && isMaxHeap l && isMaxHeap r
+
+-- isTreap(0) = c1
+-- isTreap(h) = isBinSearch(h) + isMaxHeap(h)
+-- isBinSearch(0) = c2
+-- isBinSearch(h) = c3 + c4 + 2*isBinSearch(h-1)
+-- isMaxheap(0) = c5
+-- isMaxheap(h) = c6 + c7 + 2*isMaxHeap(h-1)
 
 rotateL (N l' p' k' (N l p k r)) = N (N l' p' k' l) p k r
 rotateR (N (N l p k r) p' k' r' ) = N l p k (N r p' k' r' )
