@@ -20,6 +20,10 @@ checkIT (N l (a, b) r) = a <= b && checkRight r && checkLeft l && checkIT l && c
 
 -- WcheckIT (0) = c0
 -- WcheckIT (h) = c1 + WcheckRight(h-1) + WcheckLeft(h-1) + WcheckIT(h-1) + WcheckIT(h-1)
+-- WheckRight (0) = c2
+-- WheckRight (h) = Wright(h-1) + c3
+-- Wright (0) = c4
+-- Wright (h) = Wright(h-1) 
 
 -- O(h)
 
