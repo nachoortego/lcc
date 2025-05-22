@@ -188,3 +188,60 @@ Análisis por casos
 
 
 (CASO II) x > a: ANALOGO
+
+
+
+-- ej9)
+
+data GTree a = Node a [GTree a]
+
+ponerProfs n (Node x xs) = Node n (map (ponerProfs (n + 1)) xs)
+
+mapG f (Node x xs) = Node (f x) (map (mapG f) xs)
+
+-- a)
+altura (Node x xs) = 1 + maximum (map altura xs)
+
+-- b)
+maxAGT (Node x xs) = max x (maximum (map maxAGT xs))
+
+                     maximum (x : map maxAGT xs) -- Otra opcion
+
+P(t) : altura t = maxAGT (ponerProfs 1 t)
+       
+(HI) Para todo t' perteneciente a xs: P(t)  =>  (TESIS) Para todo x: P(Node x xs)
+
+
+Paso Inductivo:
+
+    (HI) Para todo t' perteneciente a xs: P(t)
+    (TESIS) Para todo x: P(Node x xs)
+
+    altura (Node x xs)              = <def altura>
+    1 + maximum (map altura xs)     = <HI, def map>
+    1 + maximum (map (maxAGT . ponerProfs 1) xs)
+
+
+    Por otro lado:
+
+    maxAGT (ponerProfs 1 (Node x xs))                            = <ponerProfs.1>
+    maxAGT (Node 1 (map (ponerProfs 2) xs))                      = <maxAGT.1>
+    max 1 (maximum (map maxAGT (map (ponerProfs 2) xs)))         = <map (f.g) = map f . map g>
+    max 1 (maximum (map (maxAGT . ponerProfs 2) xs))             = <lema 1: ponerProfs (n+1) = mapG (+1) . ponerProfs n>
+    max 1 (maximum (map (maxAGT . mapG (+1) . ponerProfs 1) xs)) = <lema 2: maxAGT . mapG (+1) = (+1) . maxAGT>
+    max 1 (maximum (map ((+1) . maxAGT . ponerProfs 1) xs))      = <map (f.g) = map f . map . g>
+    max 1 (maximum (map (+1) (map (maxAGT . ponerProfs 1) xs))) 
+
+
+Caso xs /= []:
+    max 1 (maximum (map (+1) (map (maxAGT . ponerProfs 1) xs)))  = <maximum []>
+    max 1 0                                                      = <max.1>
+    1                                                            = <antisimetrica>
+    1+0                                                          = <maximum.1, map>
+    1 + maximum (map (maxAGT . ponerProfs) [])
+
+
+Caso xs /= []:
+    max 1 (maximum (map (+1) (map (maxAGT . ponerProfs 1) xs)))  = <lema 3: xs /= [] => maximum (map (+1) xs) = 1 + maximum xs>
+    max 1 (1 + maximum (map (maxAGT . ponerProfs 1) xs))         = < x>=0  =>  max 1 (1+x) , maximum ... >= 0 >
+    1 + maximum (map (maxAGT . ponerProfs 1) xs)  
