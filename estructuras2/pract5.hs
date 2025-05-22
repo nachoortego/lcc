@@ -245,3 +245,46 @@ Caso xs /= []:
     max 1 (maximum (map (+1) (map (maxAGT . ponerProfs 1) xs)))  = <lema 3: xs /= [] => maximum (map (+1) xs) = 1 + maximum xs>
     max 1 (1 + maximum (map (maxAGT . ponerProfs 1) xs))         = < x>=0  =>  max 1 (1+x) , maximum ... >= 0 >
     1 + maximum (map (maxAGT . ponerProfs 1) xs)  
+
+
+-- 10)
+
+data Tree a = Leaf a | Node a (Tree a) (Tree a)
+
+flatten (Leaf x ) = [x]
+flatten (Node x lt rt) = flatten lt ++ [x] ++ flatten rt
+
+mapTree f (Leaf x ) = Leaf (f x )
+mapTree f (Node x lt rt) = Node (f x ) (mapTree f lt) (mapTree f rt)
+
+CB:
+    (map f . flatten) (Leaf x)     = <def .>
+    map f (flatten (Leaf x))       = <def flatten.1>
+    map f [x]                      = <def map>
+    [f x]
+        
+    (flatten . mapTree f) (Leaf x) = <def .>
+    flatten (mapTree f (Leaf x))   = <def mapTree.1>
+    flatten (Leaf (f x))           = <def flatten.1>
+    [f x]
+
+
+CI:
+    (HI1) (map f . flatten) l = (flatten . mapTree) f l 
+    (HI2) (map f . flatten) r = (flatten . mapTree) f r 
+
+    (TESIS) (map f . flatten) (Node x l r) = (flatten . mapTree f) (Node x l r)
+
+    (map f . flatten) (Node x l r)                                    = <def .>
+    map f (flatten (Node x l r))                                      = <def flatten.2>
+    map f (flatten l ++ [x] ++ flatten r)                             = <lema: map f (ls ++ rs) = (map f ls) ++ (map f rs)>
+                                                                        <def .><def map>
+    (map f . flatten) l + [f x] + (map f . flatten) r                 = <HI1><HI2>
+    (flatten . mapTree) f l ++ [f x] ++ (flatten . mapTree) f r       
+
+
+    (flatten . mapTree f) (Node x l r)                                = <def .>
+    flatten (mapTree f (Node x l r))                                  = <def mapTree.2>
+    flatten (Node (f x ) (mapTree f l) (mapTree f r))                 = <def flatten.2>
+    flatten (mapTree f l) ++ [f x] ++ flatten (mapTree f r)           = <def .>
+    (flatten . mapTree) f l ++ [f x] ++ (flatten . mapTree) f r       
