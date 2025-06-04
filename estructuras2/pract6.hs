@@ -38,10 +38,10 @@ cons a (Node _ l _ _) = cons a l
 tabulate :: (Int -> a) -> Int -> BTree a
 tabulate f 0 = Empty
 tabulate f n = cons (f n) (tabulate f (n-1))
-
+{-
 tabulate :: (Int -> a) -> Int -> Tree a
-tabulate f n = let m = div n 2
-                   (l, r, x) == tabulate f m || tabulate (f.(+m+1)) (n-m-1) || f m
+tabulate f n =  let m = div n 2
+                    ((l, r), x) == (tabulate f m ||| tabulate (f.(+m+1)) (n-m-1)) ||| f m
                 in N l x r
 
 tabulate' f n m | m < n = E
@@ -51,6 +51,7 @@ tabulate' f n m | m < n = E
                             f me
                          in N l x r
 
+-}
 {-Cambia el trabajo no la profundidad (?)-}
 
 mapBT :: (a -> b) -> BTree a -> BTree b
@@ -89,9 +90,9 @@ dropBT c (Node n l a r) | c == sl = Node (sr + 1) Empty a r
                             sr = size r
                             sl = size l
 --2)
-{-
-data Tree a = E | Leaf a | Join (Tree a) (Tree a)
+data Tree a = E | Leaf a | Join (Tree a) (Tree a) deriving Show
 
+{-
 mcss' :: Tree Int -> (Int, Int, Int, Int)
 mcss E = (0, 0, 0, 0)
 mcss (Leaf x) = (max 0 x, max 0 x, max 0 x, x)
@@ -108,10 +109,11 @@ mcss' (Join l r) = let
 
 --3)
 -}
-{-
+
 mejorGanancia :: Tree Int -> Int
 mejorGanancia = undefined
 
+isEmpty :: Tree a -> Bool
 isEmpty E = True
 isEmpty _ = False
 
@@ -120,20 +122,58 @@ sufijos t = fst (sufijosDesde t E)
 
 sufijosDesde :: Tree Int -> Tree Int -> (Tree (Tree Int), Tree Int)
 sufijosDesde E acc = (E, acc)
-sufijosDesde (Leaf x) acc = let suf = if isEmpty acc 
+sufijosDesde (Leaf x) acc = let newAcc = if isEmpty acc 
                                       then Leaf x 
                                       else Join (Leaf x) acc
-                            in (Leaf suf, suf)
+                            in (Leaf acc, newAcc)
 sufijosDesde (Join l r) acc = let (r', accR) = sufijosDesde r acc
                                   (l', accL) = sufijosDesde l accR
                               in (Join l' r', accL)
 
-
 conSufijos :: Tree Int -> Tree (Int, Tree Int)
-conSufijos E = 
+conSufijos t = fst (conSufijos' t E)
+
+{-
+conSufijos' :: Tree Int -> Tree Int -> Tree (Int, Tree Int)
+conSufijos' E = Leaf (0, E)
+conSufijos' (Leaf x) = Leaf (x, suf_x)
+conSufijos' t@(Join l r) = let t_suf = sufijos t
+                           in 
 -}
+conSufijos' :: Tree Int -> Tree Int -> (Tree (Int, Tree Int), Tree Int)
+conSufijos' E acc = (E, acc)
+conSufijos' (Leaf x) acc = let newAcc = if isEmpty acc 
+                                      then Leaf x 
+                                      else Join (Leaf x) acc
+                            in (Leaf (x, acc), newAcc)
+conSufijos' (Join l r) acc = let (r', accR) = conSufijos' r acc
+                                 (l', accL) = conSufijos' l accR
+                             in (Join l' r', accL)
+
+reduceT :: Tree a -> (a -> a -> a) -> a -> a
+reduceT E f e = e
+reduceT (Leaf x) f e = x
+reduceT (Join l r) f e = let (l', r') = reduceT l f e ||| reduceT r f e
+                         in f l' r'
+
+maxT :: Tree Int -> Int
+maxT t = reduceT t max (-999999)
+
+mapreduce :: (a -> b) -> (b -> b -> b) -> b -> Tree a -> b
+mapreduce f g e  = mr
+                  where mr E = e
+                        mr (Leaf a) = f a
+                        mr (Join l r ) = let (l', r') = mr l ||| mr r
+                                         in g l' r'
+
+maxAll :: Tree (Tree Int) -> Int
+maxAll = mapreduce maxT max (-999999)
+
+t3 :: Tree Int
+t3 = Join (Join (Leaf 9) (Leaf 11)) (Leaf 33)
 
 --4)
+
 data T a = E | N (T a) a (T a) 
 altura :: T a -> Int
 altura E = 0
