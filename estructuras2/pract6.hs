@@ -1,5 +1,6 @@
+import Control.Applicative (Alternative(empty))
 --1)
-data BTree a = Empty | Node Int (BTree a) a (BTree a)
+data BTree a = Empty | Node Int (BTree a) a (BTree a) deriving Show
 
 t :: BTree Char
 t = Node 8 
@@ -79,11 +80,12 @@ takeBT c (Node n l a r) | c - sr == 0 = Node c l a Empty
                         | c - sr < 0 = takeBT c l
                         | c - sr > 0 = Node c l a (takeBT (c - sr) r)
                           where 
-                            sr = size r
+                            sr = size l
 
 dropBT :: Int -> BTree a -> BTree a
 dropBT c Empty = Empty
-dropBT c (Node n l a r) | c == sl = Node (sr + 1) Empty a r
+dropBT c (Node n l a r) | c < 0 = Empty
+                        | c == sl = Node (sr + 1) Empty a r
                         | c < sl = Node (n - c) (dropBT c l) a r
                         | c > sl = dropBT (c - (sl + 1)) r
                           where 
@@ -173,6 +175,7 @@ t3 :: Tree Int
 t3 = Join (Join (Leaf 9) (Leaf 11)) (Leaf 33)
 
 --4)
+{-
 
 data T a = E | N (T a) a (T a) 
 altura :: T a -> Int
@@ -201,3 +204,50 @@ inorderT E = []
 inorderT (N l a r) = (inorderT l) ++ [a] ++ (inorderT r)
 
 t1 = (N (N E 4 (N E 9 E)) 2 (N E 3 E))
+
+-}
+
+--5)
+
+-- data BTree a = Empty | Node Int (BTree a) a (BTree a)
+
+splitAtBT :: BTree a -> Int -> (BTree a, BTree a)
+splitAtBT t i = let (t', d ) = takeBT i t ||| dropBT i t
+                in (t', d)
+
+elemBT :: BTree a -> a
+elemBT Empty = error "Elem vacio"
+elemBT (Node _ _ x _) = x
+
+rebalance :: BTree a -> BTree a
+rebalance Empty = Empty
+rebalance t@(Node i l x r) = let (l', r') = splitAtBT t (div i 2)
+                                 (x', r'') = splitAtBT r' 1
+                             in Node i (rebalance l') (elemBT x') (rebalance r'')
+
+-- Árbol desbalanceado de ejemplo
+arbolDesbalanceado :: BTree Int
+arbolDesbalanceado =
+  Node 7
+    (Node 4
+      (Node 2
+        (Node 1 Empty 1 Empty)
+        2
+        Empty)
+      3
+      (Node 1 Empty 4 Empty))
+    5
+    (Node 2
+      Empty
+      6
+      (Node 1 Empty 7 Empty))
+
+{-
+            5
+          /   \
+         3     6
+        / \     \
+       2   4     7
+      /
+     1
+-}
