@@ -112,7 +112,7 @@ mcss' (Join l r) = let
 -}
 
 mejorGanancia :: Tree Int -> Int
-mejorGanancia = undefined
+mejorGanancia t = maxAll . mapT (\(c, ventas) -> map (\v -> v - c)) . conSufijos t
 
 isEmpty :: Tree a -> Bool
 isEmpty E = True
