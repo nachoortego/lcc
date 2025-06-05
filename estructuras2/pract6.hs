@@ -76,16 +76,15 @@ Smap(h) = d
 takeBT :: Int -> BTree a -> BTree a
 takeBT c Empty = Empty
 takeBT 0 _ = Empty
-takeBT c (Node n l a r) | c - sr == 0 = Node c l a Empty
-                        | c - sr < 0 = takeBT c l
-                        | c - sr > 0 = Node c l a (takeBT (c - sr) r)
+takeBT c (Node n l a r) | c == sl = l
+                        | c < sl = takeBT c l
+                        | c > sl = Node c l a (takeBT (c - (sl + 1)) r)
                           where 
-                            sr = size l
+                            sl = size l
 
 dropBT :: Int -> BTree a -> BTree a
 dropBT c Empty = Empty
-dropBT c (Node n l a r) | c < 0 = Empty
-                        | c == sl = Node (sr + 1) Empty a r
+dropBT c (Node n l a r) | c == sl = Node (sr + 1) Empty a r
                         | c < sl = Node (n - c) (dropBT c l) a r
                         | c > sl = dropBT (c - (sl + 1)) r
                           where 
