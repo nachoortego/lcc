@@ -4,6 +4,7 @@
 #include <time.h>
 #include <pthread.h>
 #include <semaphore.h>
+#include <stddef.h>
 
 sem_t tabaco, papel, fosforos, otra_vez;
 
