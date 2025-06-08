@@ -1,0 +1,2 @@
+#define SRV_NOMBRE "./SERVIDOR"
+#define MAXMSG 1024

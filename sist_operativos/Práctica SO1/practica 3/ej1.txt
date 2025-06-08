@@ -1,0 +1,24 @@
+pthread_mutex_lock(&lk);
+P = true;
+pthread_cond_signal(&cv);
+M = true;
+pthread_mutex_unlock(&lk);
+
+La mala práctica es mandar el signal antes que la condicion sea veradera.
+
+Cuando se manda el signal, el proceso en espera sale de la cola del wait pero 
+queda en la cola del lock, esperando a que se libere.
+
+
+En MESA, se desbloquea la condicion y se pone en la cola del lock, cheque una vez mas si cumple la condicion 
+antes de salir del while.
+
+En Hoare Solo tiene un if por lo que puede salir sin tener la condicion pero teniendo el lock.  
+
+MESA
+while(!cond)
+    pthread_cond_wait(&cv, mutex_lock);
+
+HOARE
+if(!cond)
+    pthread_cond_wait(&cv, mutex_lock);
