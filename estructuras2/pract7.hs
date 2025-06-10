@@ -52,7 +52,6 @@ reverse :: Seq a -> Seq a
 reverse s = tabulate (\i -> nth (length s - i) s) (length s)
 
 zip3 :: Seq a -> Seq b -> Seq c -> Seq (a, b, c)
-zip3 :: Seq a -> Seq b -> Seq (a, b)
 zip3 s1 s2 s3 = if isEmpty s1 
                 then empty 
                 else if s2 == empty 
@@ -60,3 +59,29 @@ zip3 s1 s2 s3 = if isEmpty s1
                      else if s3 == empty 
                           then empty
                           else tabulate (\i-> (nth i s1, nth i s2, nth i s3)) (min (lentgh s) (length s2) (length s3))
+
+--4)
+data Paren = Open | Close
+
+matchParen :: Seq Paren -> Bool
+matchParen s = matchP s == (0, 0)
+
+matchP :: Seq Paren -> (Int, Int)
+matchP s = showT s
+
+
+matchParenScan :: Seq Paren -> Bool
+matchParenScan s = let delta Open  = 1
+                       delta Close = -1
+                       acc = scan (+) 0 (map delta s)
+                   in all (>= 0) acc && (nth (length i) acc) == 0
+
+all :: (a -> Bool) -> Seq a -> Bool
+all p s = reduce (&&) True (map p s)
+
+--5)
+
+longestContSeq :: Seq a -> Int
+longestContSeq s = let pairs = tabulate (\i -> (nth i s, nth (i+1) s)) (length s - 1)
+                       bools = map (\(a,b) -> a < b) s
+                       count = tabulate (\i -> if (nth i s) then  else 0)
