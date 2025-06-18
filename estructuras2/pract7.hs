@@ -81,7 +81,36 @@ all p s = reduce (&&) True (map p s)
 
 --5)
 
-longestContSeq :: Seq a -> Int
-longestContSeq s = let pairs = tabulate (\i -> (nth i s, nth (i+1) s)) (length s - 1)
-                       bools = map (\(a,b) -> a < b) s
-                       count = tabulate (\i -> if (nth i s) then  else 0)
+combine :: (Int, Int, Int, Int, Int, Int) -> (Int, Int, Int, Int, Int, Int) -> (Int, Int, Int, Int, Int, Int)
+combine (s, pref, suf, p, u, l) (s', pref', suf', p', u', l') = 
+    if u <= p'  
+    then let v = pref' + suf -- une ambos largos de secuencia 
+         in if pref == l && suf' == l' then (max v s s', pref+pref', suf+suf', p, u', l+l') -- sufijo es toda la lista y prefijo es toda la lista
+            else if pref == l -- si es solo el pref 
+                 then (max v s s', pref+pref', suf, p, u', l+l')
+                 else if suf' == l' -- si es solo el suf
+                      then (max v s s', pref, suf+suf', p, u', l+l')
+                      else (max v s s', pref, suf', p, u', l+l') -- otro caso
+    else (max s s', pref, suf', p, u', l+l') -- no se pueden unir
+
+base v = (1, 1, 1, v, v, 1)
+
+val = (0, 0, 0, minBound, minBound, 0)
+
+sccml :: Seq Int -> Int
+sccml s = fst (reduce combine val (map base s))
+
+--6)
+
+cantMultiplos :: Seq Int -> Int
+cantMultiplos s = let s' = tabulate (\i -> drop i s) (length s - 1) 
+                      modSeq s = reduce (+) 0 (tabulate (\i -> p (nth 1 s) (nth i+1) ) (length s - 1))
+                  in mapreduce (+) 0 modSeq s'
+
+p :: Int -> Int -> Bool
+p a b = if mod a b == 0 then 1 else 0
+
+--7)
+--a)
+merge :: (a -> a -> Ordering) -> Seq a -> Seq a -> Seq a
+merge or s1 s2 = 
