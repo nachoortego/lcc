@@ -10,9 +10,9 @@ promedios s = let (xs, xss) = scan (+) 0 s
               in tabulate (\i -> (nth i s') / i) l   
 
 zip :: Seq a -> Seq b -> Seq (a, b)
-zip s s' = if s == empty 
+zip s s' = if isEmpty s 
            then empty 
-           else if s' == empty 
+           else if isEmpty s'
                 then empty
                 else tabulate (\i-> (nth i s, nth i s')) (min (length s) (length s'))
 
@@ -54,9 +54,9 @@ reverse s = tabulate (\i -> nth (length s - i) s) (length s)
 zip3 :: Seq a -> Seq b -> Seq c -> Seq (a, b, c)
 zip3 s1 s2 s3 = if isEmpty s1 
                 then empty 
-                else if s2 == empty 
+                else if isEmpty s2 
                      then empty
-                     else if s3 == empty 
+                     else if isEmpty s3
                           then empty
                           else tabulate (\i-> (nth i s1, nth i s2, nth i s3)) (min (lentgh s) (length s2) (length s3))
 
@@ -113,4 +113,86 @@ p a b = if mod a b == 0 then 1 else 0
 --7)
 --a)
 merge :: (a -> a -> Ordering) -> Seq a -> Seq a -> Seq a
-merge or s1 s2 = 
+merge ord s1 s2 = case showT s1 of
+                    EMPTY -> s2
+                    ELF x -> let (f1, f2) = (filter (ord x) s2) ||| (filter (not (ord x)) s2)
+                             in append (append f1 x) f2
+                    NODE l r -> let lastL = nth (length l) l
+                                    (f1, f2) = (filter (ord lastL) s2) ||| (filter (not (ord lastL)) s2)
+                                    (l1, r1) = merge l f1 ||| merge r f2
+                                in append l1 r1
+--merge ord s1 s2 = reduce oplus
+
+oplus s1 s2 = let x = nths (div |s1| 2) 
+
+--b)
+sort :: (a -> a -> Ordering) -> Seq a -> Seq a
+sort ord s = reduce empty (merge ord) s
+
+--c)
+maxE :: (a -> a -> Ordering) -> Seq a -> a
+maxE ord s = reduce (maxf ord) (nth 1 s) s
+
+maxf :: (a -> a -> Ordering) -> Seq a -> Seq a -> Seq a
+maxf (ord a b) = if (ord a b) then b else a
+
+--d)
+maxS :: (a -> a -> Ordering) -> Seq a -> Nat
+maxS ord s = let ordZ (i1, a) (i2, b) = if (ord a b) then (i2, b) else (i1, a)
+                 zippedS = zip (0..(length s)) s
+             in fst (maxE ordZ zippedS)
+
+--e)
+group :: (a -> a -> Ordering) -> Seq a -> Seq a
+group ord s = case showT s of
+                EMPTY -> empty
+                ELF x -> x
+                NODE l r -> if (eq ord) (nth (length s) l) (nth 1 r) then append l (drop 1 r) else append l r  
+
+groupAux ord l r = if (eq ord) (nth (length s) l) (nth 1 r) then append l (drop 1 r) else append l r
+
+groupReduce ord s = flatten reduce (groupAux ord) empty (map singleton s)
+
+eq :: (a -> a -> Ordering) -> a -> a -> Bool 
+eq ord a b = (ord a b) == (ord b a)
+
+--f)
+--Recolecta todos los datos asociados a cada clave y devuelve una
+--secuencia de pares ordenada seg´un el primer elemento. Por ejemplo,
+--collect 〈(2, "A"), (1, "B"), (1, "C"), (2, "D")〉 = 〈(1, 〈"B", "C"〉), (2, 〈"A", "D"〉)
+
+collect :: Seq (a, b) -> Seq (a, Seq b)
+collect chancho = groupCollect (sort eo chancho) 
+
+groupCollectAux eo l r = let ll = (nth (length s) l)
+                             fr = (nth 1 r)
+                         in
+                            if (eq eo) ll fr 
+                            then append (append (take ((length l) -1) l) (aka (ll fr))) (drop 1 r) 
+                            else append l r
+
+aka:: (a, b) -> (a,b) -> (a,b)
+aka (a, x) (b, y) = (a, append x y)
+
+groupCollect ord s = flatten (reduce (groupCollectAux ord) empty (map mapCol s))
+
+eo:: a -> a -> Bool
+eo (a, _) (b, _) = a <= b
+
+mapCol (a, b) = singleton (a, singleton b)
+
+--8)
+datosIngreso :: Seq (String, Seq Int) -> Seq (Int, Int) 
+datosIngreso s = mapCollectReduce apv red s
+
+apv :: (String, Seq Int) -> Seq (Int, Float)
+apv (_, s) = let prom = meanSeq s
+             in 
+                if prom >= 70 
+                then singleton (1, prom)
+                else if prom >= 50 
+                     then singleton (2, prom)
+                     else singleton (3, prom) 
+
+red :: (Int, Seq Float) -> (Int, Float)
+red (i, xs) = (i, maxE (<=) xs)
