@@ -49,26 +49,36 @@ tad BalT (A: Ordered Set) where
         empty: BalT A 
         join: BaltT A -> Maybe A -> BalT A -> BalT A 
     }
-    size
+    size: BaltT A -> N
     expose: BalT A -> Maybe (BalT A, A, BalT A)
 
 
 
 -- No funciona especificando entrada
 expose empty = Nothing
-expose (join l x r)
+expose (join l x r) -- join NO es un constructor
 
 -- Se hace por salida
 
-t = maybe (expose t) empty
-          Join (p1 (fromJust (exposet)))
+-- (probablemente mal copiado de clase)
+t = Maybe (expose t) empty
+          join (p1 (fromJust (exposet)))
                (Just (p2 (fromJust (expose t))))
                (p3 (fromJust (expose t)))
 
-t = case expose t of
-    Nothing -> empty
-    Just (l, x, r) -> join l (Just x) r
+-- (solución válida que se me ocurre)
+-- size
+size empty = 0
+size t = case expose t of
+    Nothing -> 0
+    Just (l, x, r) -> 1 + size l + size r
 
+-- expose
+expose empty = Nothing
+
+t = case expose t of
+      Nothing -> empty
+      Just (l, x, r) -> join l (Just x) r
 
 -- 6)
 HI: (uncurry zip) . unzip ps = ps
