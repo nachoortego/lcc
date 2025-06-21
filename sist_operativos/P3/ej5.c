@@ -5,7 +5,7 @@
 #include <semaphore.h>
 
 #define SILLAS 5
-#define CLIENTES 50
+#define CLIENTES 20
 #define ESPERA 500000
 
 sem_t sillas_disponibles;
@@ -15,7 +15,7 @@ sem_t sem_pago;
 pthread_mutex_t mutex_barbero = PTHREAD_MUTEX_INITIALIZER;
 pthread_cond_t barbero_despertar = PTHREAD_COND_INITIALIZER;
 
-int barbero_dormido = 1;
+int barbero_dormido = 0;
 
 void dormir() {
     pthread_mutex_lock(&mutex_barbero);
