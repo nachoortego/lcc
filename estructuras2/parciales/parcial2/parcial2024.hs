@@ -147,8 +147,8 @@ spaml_aux s =
     s_info = map f s_dif
     (s_red, r) = scan g (nth 0 s_info) (drop s_info 1)
     s_res  = map h (append s_red (singleton r))
-    f = 
-    g = 
-    h = 
+    f = \d -> (d,1)
+    g = \(d1, l1) (d2, l2) -> if d1 == d2 then (d1, l1+1) else (d2, 1)
+    h = \(_, l) -> l
   in
     1 + reduce max 0 s_res
