@@ -131,4 +131,24 @@ True
 
 CASO k > k': ANALOGO
 
-                                                       
+--2)
+
+spaml :: Seq Int -> Int
+spaml s | n <= 2     = n
+        | otherwise = spaml_aux s
+  where n = length s
+
+spaml_aux :: Seq Int -> Int
+spaml_aux s =
+  let
+    n     = length s
+    s_dif = tabulate (\i -> nth (i + 1) s - nth i s) (n - 1)
+
+    s_info = map f s_dif
+    (s_red, r) = scan g (nth 0 s_info) (drop s_info 1)
+    s_res  = map h (append s_red (singleton r))
+    f = 
+    g = 
+    h = 
+  in
+    1 + reduce max 0 s_res
