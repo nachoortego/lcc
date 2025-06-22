@@ -147,8 +147,13 @@ spaml_aux s =
     s_info = map f s_dif
     (s_red, r) = scan g (nth 0 s_info) (drop s_info 1)
     s_res  = map h (append s_red (singleton r))
-    f = \d -> (d,1)
-    g = \(d1, l1) (d2, l2) -> if d1 == d2 then (d1, l1+1) else (d2, 1)
-    h = \(_, l) -> l
+    f = \d -> (d, 1, d, 1,d, 1)
+    g = \(dl1, sl1, d1, s1, dr1, sr1) (dl2, sl2, d2, s2, dr2, sr2) 
+    -> if dr1 == dl2 then 
+                       let new_s = max (max s1 (sr1 + sl2)) s2
+                       in (dl1, sl1, dr1, new_s, dr2, sr2)
+                     else
+                       (dl1, sl1, d1, max s1 s2, dr2, sr2)
+    h = \(_, _, _,s, _, _) -> s
   in
     1 + reduce max 0 s_res

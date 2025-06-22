@@ -47,8 +47,8 @@ tabulate f n =  let m = div n 2
 
 tabulate' f n m | m < n = E
                 | True = let me = div (n+m) 2
-                            ((l, r), x) = tabulate' f n (me - 1) ||
-                            tabulate' f (me + 1) m ||
+                            ((l, r), x) = tabulate' f n (me - 1) |||
+                            tabulate' f (me + 1) m |||
                             f me
                          in N l x r
 
@@ -93,7 +93,6 @@ dropBT c (Node n l a r) | c == sl = Node (sr + 1) Empty a r
 --2)
 data Tree a = E | Leaf a | Join (Tree a) (Tree a) deriving Show
 
-{-
 mcss' :: Tree Int -> (Int, Int, Int, Int)
 mcss E = (0, 0, 0, 0)
 mcss (Leaf x) = (max 0 x, max 0 x, max 0 x, x)
@@ -105,11 +104,11 @@ mcss' (Join l r) = let
                      max pre1 (l1 + pre2),
                      l1 + l2)
 
--- mcss :: (Num a, Ord a) => Tree a -> a
--- mcss = (\(x,y,z,w) -> x) mcss'
+mcss :: (Num a, Ord a) => Tree a -> a
+mcss = (\(x,y,z,w) -> x) mcss'
+
 
 --3)
--}
 
 mejorGanancia :: Tree Int -> Int
 mejorGanancia t = maxAll . mapT (\(c, ventas) -> map (\v -> v - c)) . conSufijos t

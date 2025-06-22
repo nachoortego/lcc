@@ -21,9 +21,9 @@ zip s s' = if isEmpty s
 -- mayores〈1, 2, 5, 3, 5, 2, 7, 9 = 4
 
 mayores :: Seq Int -> Int
-mayores s = let (xs, xss) = (scan max maxBound s)
-                s' = drop 1 (append xs xss)
-                zips = zip s s'
+mayores s = let (s', v) = (scan max maxBound s)
+                s'' = append (drop 1 s) (singleton v)                
+                zips = zip s s''
             in reduce (+) 0 (map compare zips)
             where
                 compare (a, b) | a > b = 1
@@ -115,15 +115,13 @@ p a b = if mod a b == 0 then 1 else 0
 merge :: (a -> a -> Ordering) -> Seq a -> Seq a -> Seq a
 merge ord s1 s2 = case showT s1 of
                     EMPTY -> s2
-                    ELF x -> let (f1, f2) = (filter (ord x) s2) ||| (filter (not (ord x)) s2)
+                    ELT x -> let (f1, f2) = (filter (ord x) s2) ||| (filter (not (ord x)) s2)
                              in append (append f1 x) f2
-                    NODE l r -> let lastL = nth (length l) l
+                    NODE l r -> let lastL = nth (length l - 1) l
                                     (f1, f2) = (filter (ord lastL) s2) ||| (filter (not (ord lastL)) s2)
                                     (l1, r1) = merge l f1 ||| merge r f2
                                 in append l1 r1
---merge ord s1 s2 = reduce oplus
 
-oplus s1 s2 = let x = nths (div |s1| 2) 
 
 --b)
 sort :: (a -> a -> Ordering) -> Seq a -> Seq a
@@ -146,7 +144,7 @@ maxS ord s = let ordZ (i1, a) (i2, b) = if (ord a b) then (i2, b) else (i1, a)
 group :: (a -> a -> Ordering) -> Seq a -> Seq a
 group ord s = case showT s of
                 EMPTY -> empty
-                ELF x -> x
+                ELT x -> x
                 NODE l r -> if (eq ord) (nth (length s) l) (nth 1 r) then append l (drop 1 r) else append l r  
 
 groupAux ord l r = if (eq ord) (nth (length s) l) (nth 1 r) then append l (drop 1 r) else append l r
