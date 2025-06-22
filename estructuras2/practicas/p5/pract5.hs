@@ -62,7 +62,7 @@ expose (join l x r) -- join NO es un constructor
 
 -- (probablemente mal copiado de clase)
 t = Maybe (expose t) empty
-          join (p1 (fromJust (exposet)))
+          join (p1 (fromJust (expose t)))
                (Just (p2 (fromJust (expose t))))
                (p3 (fromJust (expose t)))
 
@@ -131,8 +131,8 @@ isBST (insert x Hoja)                        = <def insert.1>
 isBST (Nodo Hoja x Hoja)                     = <def isBST.2>
 (isHoja Hoja || a >= maxT Hoja) 
 && (isHoja Hoja || a < minT Hoja) 
-&& isBST Hoja && isBST Hoja                  = <def isHoja.1> <def ||> <def isBST.1>
-True && True && True && True                  = <def &&>
+&& isBST Hoja && isBST Hoja                  = <def isHoja.1> <def || > <def isBST.1>
+True && True && True && True                 = <def &&>
 True
 
 
