@@ -17,13 +17,13 @@ ventas : Seq Float -> (Seq Float, Float)
 
 [ 2, 3, 4, 2, 6] -> ([2, 3, 4, 6],2)
 
-s'    = [ 0, 2, 2.5, 3 , 3  , 18/5 ]
+s'    = [ 0, 2, 2.5, 3 , 11/3  , 17/5 ]
 s_red = [ 2, 5, 9  , 11, 17 ]
 
-ventas s = let = (s_red, r) = scan (+) 0 s
-                 s' = append (singleton 0) (tabulate (\i -> (nth (i+1) s_red) / (i+1)) (length s_red - 1))
-                 s_z = tabulate (\i -> (nth i s, nth i s')) (length s)
-                 comp = filter (\(c, p) -> c > p) s_z 
-                 min_c = mapreduce min 0 (\(c, p) -> c) comp'
+ventas s = let (s_red, r) = scan (+) 0 s
+               s' = append (singleton 0) (tabulate (\i -> (nth (i+1) s_red) / (i+1)) (length s_red - 1))
+               s_z = tabulate (\i -> (nth i s, nth i s')) (length s)
+               comp = filter (\(c, p) -> c > p) s_z 
+               min_c = mapreduce min 0 (\(c, p) -> c) comp'
            in
             (comp', min_c)

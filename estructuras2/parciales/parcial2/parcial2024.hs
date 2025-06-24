@@ -70,7 +70,9 @@ erase k v (N l (k', vs) r) | k === k' = N l (k elim v vs) r
 erase k v E = E
 
 
-isBST (N l (k, _) r) = (isHoja l || maxT l <= k) && (isHoja r || minT r > k) && isBST l && isBST r
+isBST (N l (k, _) r) = (isHoja l || maxT l <= k) && 
+                       (isHoja r || minT r > k) 
+                       && isBST l && isBST r
                         where
                           isHoja E = True 
                           isHoja _ = False
@@ -104,9 +106,9 @@ Desarrollo de (HIP):
 
 CASO k == k':
 
-isBST (erase k v (N l (k', _) r))     = <erase.1> <k==k'>
+isBST (erase k v (N l (k', vs) r))     = <erase.1> <k==k'>
 
-isBST (N l (k elim v vs) r )          = <isBST.1>
+isBST (N l (k (elim v vs)) r )          = <isBST.1>
 
 (isHoja l || maxT l <= k) && 
 (isHoja r || minT r > k) && 
@@ -115,7 +117,7 @@ isBST l && isBST r                    = <HIP 1,2,3,4>
 True 
 
 CASO k < k': 
-isBST (erase k v (N l (k', _) r))                     = <erase.1> <k<k'>
+isBST (erase k v (N l (k', vs) r))                     = <erase.1> <k<k'>
 
 isBST (N (erase k v l) (k', vs) r)                    = <isBST.1>
 
