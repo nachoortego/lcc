@@ -49,7 +49,7 @@ aguaHist s = let s' = append 0 s
                 reduce (+) 0 water
 
 reverse :: Seq a -> Seq a 
-reverse s = tabulate (\i -> nth (length s - i) s) (length s)
+reverse s = tabulate (\i -> nth (length s - i - 1) s) (length s)
 
 zip3 :: Seq a -> Seq b -> Seq c -> Seq (a, b, c)
 zip3 s1 s2 s3 = if isEmpty s1 
@@ -87,7 +87,7 @@ combine (s, pref, suf, p, u, l) (s', pref', suf', p', u', l') =
     then let v = pref' + suf -- une ambos largos de secuencia 
          in if pref == l && suf' == l' then (max v s s', pref+pref', suf+suf', p, u', l+l') -- sufijo es toda la lista y prefijo es toda la lista
             else if pref == l -- si es solo el pref 
-                 then (max v s s', pref+pref', suf, p, u', l+l')
+                 then (max v s s', pref+pref', suf', p, u', l+l')
                  else if suf' == l' -- si es solo el suf
                       then (max v s s', pref, suf+suf', p, u', l+l')
                       else (max v s s', pref, suf', p, u', l+l') -- otro caso
@@ -103,7 +103,7 @@ sccml s = fst (reduce combine val (map base s))
 --6)
 
 cantMultiplos :: Seq Int -> Int
-cantMultiplos s = let s' = tabulate (\i -> drop i s) (length s - 1) 
+cantMultiplos s = let s' = tabulate (\i -> drop i s) length s
                       modSeq s = reduce (+) 0 (tabulate (\i -> p (nth 1 s) (nth i+1) ) (length s - 1))
                   in mapreduce (+) 0 modSeq s'
 

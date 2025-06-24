@@ -1,7 +1,7 @@
 --1)
 --a)
 insert k v (insert k' v' d) = if k == k' 
-                              then insert k v
+                              then insert k v d
                               else insert k' v' (insert k v) d
 
 erase k empty = empty

@@ -42,11 +42,11 @@ isValue k v (N l (k', t) r) | k == k' = search t
 toMap :: Ord k => MultiDic k v -> Tree (k, Int, v)
 toMap E = Empty 
 toMap (N l (k, t) r) = let (l', r') = toMap l ||| toMap r 
-                       in join l' (join (flatten 0 k t) r')
+                       in join l' (join (flatten 0 t) r')
                          where
-                          flatten i k Empty        = Empty
-                          flatten i k (Leaf v)     = Leaf (k, i, v)
-                          flatten i k (Node n l r) = let (lf, rf) = flatten i k l ||| flatten (i + size l) k r
+                          flatten i Empty        = Empty
+                          flatten i (Leaf v)     = Leaf (k, i, v)
+                          flatten i (Node n l r) = let (lf, rf) = flatten i k l ||| flatten (i + size l) k r
                                                    in join lf rf
 
 size :: Tree a -> Int
@@ -58,7 +58,6 @@ join :: Tree a -> Tree a -> Tree a
 join Empty r = r
 join l Empty = l 
 join l r     = Node (size l + size r) l r
-                      
 
 -- toMap ⟨⟨1, ⟨a, f, g⟩⟩,⟨2, ⟨m,a⟩⟩⟩ = ⟨(1,0,a), (1, 1, f), (1, 2, g), (2, 0, m), (2, 1, a)⟩
 
@@ -147,13 +146,19 @@ spaml_aux s =
     s_info = map f s_dif
     (s_red, r) = scan g (nth 0 s_info) (drop s_info 1)
     s_res  = map h (append s_red (singleton r))
-    f = \d -> (d, 1, d, 1,d, 1)
-    g = \(dl1, sl1, d1, s1, dr1, sr1) (dl2, sl2, d2, s2, dr2, sr2) 
-    -> if dr1 == dl2 then 
-                       let new_s = max (max s1 (sr1 + sl2)) s2
-                       in (dl1, sl1, dr1, new_s, dr2, sr2)
-                     else
-                       (dl1, sl1, d1, max s1 s2, dr2, sr2)
-    h = \(_, _, _,s, _, _) -> s
+    f = (\x -> (1, x, x, x))
+    g = g'
+    h = fst
   in
     1 + reduce max 0 s_res
+  where g' (s1, p1, u1, pref1, suf1, l1) (s2, p2, u2, pref2, suf2, l2) = 
+    if u1 == p2 
+    then let v = suf1+pref2
+         in if pref1 == l1 && suf2 == l2
+            then (maximum [s1, s2, v], p1, u2, pref1+pref2, suf1+suf2, l1+l2)
+            else if pref1 == l1 
+                  then (maximum [s1, s2, v], p1, u2, pref1+pref2, suf2, l1+l2)
+                  else if suf2 == l2 
+                      then (maximum [s1, s2, v], p1, u2, pref1, suf1+suf2, l1+l2)
+                      else (maximum [s1, s2, v], p1, u2, pref1, suf2, l1+l2)
+    else (max s1 s2, p1, u2, pref1, suf2, l1+l2)
