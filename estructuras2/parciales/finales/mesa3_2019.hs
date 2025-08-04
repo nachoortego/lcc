@@ -2,29 +2,40 @@
 
 data BTree a = E | L a | N Int (BTree a) (BTree a)
 
+size :: BTree a -> Int 
+size (N n _ _) = n 
+
 stripSufix :: Eq a => BTree a -> BTree a -> Maybe (BTree a)
-stripSufix E s = Just s
-stripSufix _ E = Nothing
-stripSufix suf s = let ((lsuf, suf'),(ls, s')) = last suf ||| last s
-                   in
-                     if lsuf == ls
-                     then stripSufix suf' s'
-                     else Nothing
+stripSufix E t = Just t
+stripSufix suf t | size suf > size = Nothing 
+                 | otherwise = let (l, r) = splitAt (size t - size suf) t
+                               in if (eq r suf) 
+                                  then Just l 
+                                  else Nothing 
 
-last :: BTree a -> (BTree a, Maybe a)
-last E = (E, Nothing)
-last (L a) = (E, Just a) 
-last (N n l E) = let (l', a) = last l
-                 in (N (n-1) l' E, a)
-last (N n l r) = let (r', a) = last r
-                 in (N (n-1) l r', a)
+splitAt :: Int -> BTree a -> (BTree a, BTree a)
+splitAt _ E = (E, E)
+splitAt i t@(L a) | i <= 0    = (E, t)
+                  | otherwise = (t, E)
+splitAt i (N n l r) | i < sizeL = let (l1, l2) = splitAt i l
+                                  in (l1, N (size l2 + size r) l2 r)
+                    | i == sizeL = (l, r)
+                    | otherwise  = let (r1, r2) = splitAt (i - sizeL) r
+                                   in (N (size l + size r1) l r1, r2)
+                      where
+                        sizeL = size l
 
--- agarrar tamaño del primer argumento O(1) y comparar 
 
-splitTree :: BTree a -> n -> (BTree a, BTree a)
-splitTree E _ = (E, E)
-splitTree (L a) _ = a
+inorder :: BTree a -> [a]
+inorder t = go t []
+  where
+    go E acc = acc
+    go (L a) acc = a : acc
+    go (N _ l r) acc = go l (go r acc)
 
+eq :: Eq a => BTree a -> BTree a -> Bool
+eq t1 t2 = let (t1', t2') = inorder t1 ||| inorder t2 
+           in t1' == t2'
 
 --2) 
 
@@ -46,15 +57,19 @@ maxBalance s = let s' = map (\a -> (a, a, a, a)) s
 
 --3)
 
-dimension (new 0 v) = 0
-dimension (new n v) = n
-dimension (set i v a) = dimension a
-dimension (slicing i j a) = j - i + 1
+dimension (set i v arr) = dimension arr 
+dimension (new d v) = d 
 
-get i (new n v) = v
-get j (set i v a) = if i == j then v else get j a
-get k (slicing i j a) = get (i + k) a
+get i (set j v arr) = if i == j 
+                      then v 
+                      else get i arr
+get i (new d v) = v
 
+slicing i j arr = slicing' i i j arr
+
+slicing' t i j arr = if t <= j 
+                     then set (t - i) (get t arr) (slicing' (t + 1) i j arr)
+                     else new (j - i + 1) (get 0 arr)
 
 --4) 
 
