@@ -65,16 +65,22 @@ k > q: ANALOGO con HI2
 data Tree a = E | N Int (Tree a) a (Tree a)
 
 filterPrefix :: (a -> Bool) -> Tree a -> Tree a
-filterPrefix p E           = E
-filterPrefix p (N _ l x r) = let l' = filterPrefix l
-                                 px = p x && (l' /= E || l == E)
-                             in 
-                               if px 
-                               then (N l x filterPrefix r)
-                               else E
+filterPrefix p E = E
+filterPrefix p (N _ l x r) =
+  let l' = filterPrefix p l
+  in if not (p x)
+     then l'                  -- prefijo termina antes de la raíz
+     else
+       let r' = filterPrefix p r
+           sizeL = treeSize l'
+           sizeR = treeSize r'
+       in N (sizeL + 1 + sizeR) l' x r'
 
--- Agregar un parametro bool cuando no se cumple la condicion 
--- y recibir en la llamda recursiva
+-- Función auxiliar para calcular tamaño del árbol
+treeSize :: Tree a -> Int
+treeSize E = 0
+treeSize (N n _ _ _) = n
+
 
 --3)
 longestStreak :: Float -> Seq Float -> Int 

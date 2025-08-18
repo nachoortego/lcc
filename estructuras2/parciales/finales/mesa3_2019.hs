@@ -7,7 +7,7 @@ size (N n _ _) = n
 
 stripSufix :: Eq a => BTree a -> BTree a -> Maybe (BTree a)
 stripSufix E t = Just t
-stripSufix suf t | size suf > size = Nothing 
+stripSufix suf t | size suf > size t = Nothing 
                  | otherwise = let (l, r) = splitAt (size t - size suf) t
                                in if (eq r suf) 
                                   then Just l 

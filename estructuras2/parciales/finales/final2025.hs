@@ -62,3 +62,16 @@ sum (map (files . mapF f) xs)     = <HI> <def map>
 sum (map files xs)                = <files.1>
 files (Dir n xs)
 
+
+
+-- Ej b con mapCollectReduce
+
+mesMax s = if isEmpty s
+           then s
+           else 
+             mapCollectReduce apv red s 
+               where
+                 apv (m, y, t) = singleton (y, (m, reduce (+) (nth 0 t) (drop 1 t)))
+                 red (y, s') = (y, fst (reduce f (nth 0 s') (drop 1 s')))
+                 f (m1, t1) (m2, t2) | t1 > t2   = (m1, t1)
+                                     | otherwise = (m2, t2)

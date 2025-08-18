@@ -148,7 +148,7 @@ spaml_aux s =
     s_info = map f s_dif
     (s_red, r) = scan g (nth 0 s_info) (drop s_info 1)
     s_res  = map h (append s_red (singleton r))
-    f = (\x -> (1, x, x, x))
+    f = (\x -> (1, x, x, 1, 1, 1))
     g = g'
     h = fst
   in

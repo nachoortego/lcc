@@ -10,14 +10,16 @@ neightboors (addEdge g (x,y)) v = if x == v
                                        then union (singleton x) (neightboors g v)
                                        else neightboors g v
 
-isPath :: Graph a -> a -> a -> Bool
-isPath g v w = dfs g v w S.empty
+isPath null x y = False
 
-dfs :: Graph a -> a -> a -> Set a -> Bool
-dfs g v w visited
-  | v == w = True
-  | S.member v visited = False
-  | otherwise = any (\u -> dfs g u w (S.insert v visited)) (S.toList (neightboors g v))
+isPath (addVertex g v) x y = isPath g x y || (x == v && y == v)
+
+isPath (addEdge g (v,w)) x y =
+   isPath g x y
+   || (x == v && (y == w || isPath g w y))
+   || (x == w && (y == v || isPath g w y))
+   || (y == v && (x == w || isPath g w y))
+   || (y == w && (x == v || isPath g w x))
 
 
 data Bit = Zero | One deriving Eq
@@ -35,7 +37,7 @@ neighbours g v  = collect 0 (g !! v)
 
 delEdge :: Graph -> (Vertex, Vertex) -> Graph
 delEdge [] _        = []
-delEdge g (v, w)    = delE 0 0 g (v, w)
+delEdge g (v, w)    = delE 0 g (v, w)
 
 delE _ [] _          = []
 delE i (g:gs) (v, w) = (delE' i 0 g (v, w)) : (delE (i+1) 0 gs (v, w))
@@ -44,7 +46,6 @@ delE i (g:gs) (v, w) = (delE' i 0 g (v, w)) : (delE (i+1) 0 gs (v, w))
                              delE' i' j (x:xs) (v', w') | i' == v' && j == w = Zero : (delE' i' (j+1) xs (v, w))
                                                         | otherwise          = x : (delE' i' (j+1) xs (v, w))
 
-delEdge g (v,w) = [ x | ]
 
 inverso :: Graph -> Graph
 inverso g = [[toggle bit | bit <- row] | row <- g]
@@ -97,7 +98,7 @@ c3 = N (N (L 'h') (L 'o')) (N (L 'l') (L 'a'))
 
 
 crear :: Int -> (Int -> Char) -> Cadena 
-crear n f = N (N (L "*") (crear' n 0 f)) (L "*")
+crear n f = N (N (L "*") (crear' n 1 f)) (L "*")
 
 crear' 0 _ _ = E
 crear' 1 i f = L (f i)
