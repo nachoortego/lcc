@@ -1,0 +1,133 @@
+[ named.conf ] ns1
+
+zone "." {
+	type hint;
+	file "root.servers";
+}
+
+zone "basel.net" {
+	type master;
+	file "/etc/bind/db.ns1";
+}
+
+zone "0.0.0.1.4.9.2.2.0.c.7.6.1.0.0.2.IP6.ARPA" {
+	type slave;
+	masters { 2a03:2880:f113:8083:face:b00c:0:25de; };
+	file "/etc/bind/rev.ros_ns1";
+}
+
+zone "3.8.0.8.3.1.1.F.8.8.2.3.0.A.2.IP6.ARPA" {
+	type slave;
+	masters { 2a03:2880:f113:8083:face:b00c:0:25de; };
+	file "/etc/bind/rev.ba_ns1";	
+}
+
+
+[ named.conf ] ns2
+
+zone "." {
+	type hint;
+	file "root.servers";
+}
+
+zone "basel.net" {
+	type slave;
+	masters { 2001:67c:2294:1000:0:0:0:f199 };
+	file "/etc/bind/db.ns2";
+}
+
+zone "3.8.0.8.3.1.1.F.8.8.2.3.0.A.2.IP6.ARPA" {
+	type master;
+	file "/etc/bind/rev.ba_ns2";	
+}
+
+zone "0.0.0.1.4.9.2.2.0.c.7.6.1.0.0.2.IP6.ARPA" {
+	type master;
+	file "/etc/bind/rev.ros_ns2";	
+}
+
+
+[ db.ns1 ]
+
+$TTL 1D
+$ORIGIN basel.net.
+
+@ IN SOA ns1 hostmaster (
+	2020120504;
+	5h;
+	15m;
+	3w;
+	5m;
+)
+
+	IN NS ns1
+	IN NS ns2.ba
+	IN MX 10 mx.ros
+
+ns1	IN AAAA 2001:67c:2294:1000:0:0:0:f199
+www 	IN CNAME ns1
+ns2.ba	IN AAAA 2a03:2880:f113:8083:face:b00c:0:25d
+mx.ros	IN AAAA 2001:67c:2294:1000:0:0:fe:f199
+
+
+[ rev.ros_ns1 ]
+
+$TTL 1D
+$ORIGIN 0.0.0.1.4.9.2.2.0.c.7.6.1.0.0.2.IP6.ARPA
+
+@ IN SOA ns2.ba.basel.net hostmaster.basel.net (
+	2020120504;
+	5h;
+	15m;
+	3w;
+	5m;
+)
+
+	IN NS ns1.basel.net.
+	IN NS ns2.ba.basel.net.
+
+9.9.1.F.0.0.0.0.0.0.0.0.0.0.0.0		IN PTR ns1.basel.net.
+9.9.1.F.0.0.E.F.0.0.0.0.0.0.0.0		IN PTR mx.ros.basel.net.
+
+[ rev.ba_ns1 ]
+
+$TTL 1D
+$ORIGIN 3.8.0.8.3.1.1.F.8.8.2.3.0.A.2.IP6.ARPA
+
+@ IN SOA ns2.ba.basel.net hostmaster.basel.net (
+	2020120504;
+	5h;
+	15m;
+	3w;
+	5m;
+)
+
+	IN NS ns1.basel.net.
+	IN NS ns2.ba.basel.net.
+
+E.D.5.2.0.0.0.0.C.0.0.B.E.C.A.F		IN PTR ns2.ba.basel.net.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

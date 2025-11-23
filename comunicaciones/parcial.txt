@@ -1,0 +1,197 @@
+2)
+
+[ named.conf ]
+
+view "interna" {
+	match-clients { FDE4:8DBA:82E1::/64 };
+
+	zone "matbaforex.com.ar" {
+		type master;
+		file "/etc/bind/db.matba_int";
+	}
+
+	zone "1.E.2.8.A.B.D.8.4.E.D.F.IP6.ARPA" {
+		type master;
+		file "/etc/bind/rev.matba_int";
+	}
+
+	zone "primary.com.ar" {
+		type slave;
+		masters { FDE4:8DBA:82E1::6; }
+		file "/etc/bind/db.primary"
+	} 
+
+}
+
+view "externa" {
+	match-clients { 2001:DB8:54FE::/64 };
+
+	zone "matbaforex.com.ar" {
+		type master;
+		file "/etc/bind/db.matba_ext";
+	}
+
+}
+
+[ db.matba_int ]
+
+$TTL 1D
+$ORIGIN matbaforex.com.ar.
+
+@ IN SOA dns hostmaster (
+	2020120405;
+	2h;
+	15m;
+	3W;
+	1h;	
+)
+
+	IN NS dns
+	IN MX 10 info
+	IN NS dns2.primary.com.ar.
+
+dns 			IN AAAA FDE4:8DBA:82E1::3
+www 			IN CNAME dns
+info			IN AAAA FDE4:8DBA:82E1::20
+dns2.primary.com.ar.	IN AAAA FDE4:8DBA:82E1::6
+
+
+3)
+
+[ named.conf ]  dns.rolex.com
+
+zone "rolex.com" {
+	type master;
+	file "/etc/bind/db.dns";
+}
+
+
+[ named.conf ]  dns.perpetual-initiatives.rolex.com
+
+zone "perpetual-initiatives.rolex.com" {
+	type master;
+	file "/etc/bind/db.perp";
+}
+
+zone "0.138.32.172.in-addr.arpa" {
+	type master;
+	file "/etc/bind/rev.perp"
+}
+
+
+[ db.dns ]
+
+$TTL 1D
+$ORIGIN rolex.com.
+
+@ IN SOA dns hostmaster {
+	2020120403:
+	5h;
+	15m
+	3w;
+	2h;
+}
+
+	IN NS dns
+	IN MX 10 email
+	IN NS ns.rolex.org.
+
+dns 			IN A 173.223.153.242
+www 			IN CNAME dns
+email			IN A 64.223.180.108
+ns.rolex.org.		IN A 52.101.73.8
+
+# watches.rolex.com
+clasicos.watches    	IN A 173.223.153.241
+profesionales.watches 	IN A 173.223.153.240
+
+# Delegacion perpetua
+
+perpetual-initiatives 		IN NS dns.perpetual-initiatives.rolex.com.
+dns.perpetual-initiatives 	IN A 173.223.153.142
+ns.rolex.org.              	IN A 52.101.73.8
+
+
+
+4)
+
+I = /sbin/iptables
+DMZ  = 168.96.18.0/29
+IDMZ = 168.96.18.1
+srv1 = 168.96.18.2
+srv2 = 168.96.18.3
+LAN  = 192.168.0.0/24
+ILAN = 192.168.0.1
+DB   = 192.168.0.254
+INET = 45.231.2.17
+
+
+$I -P FORWARD -j DROP
+$I -P INPUT -j DROP
+$I -P OUTPUT -j DROP
+
+$I -A FORWARD -m state --state INVALID -j DROP
+$I -A FORWARD -m state --state RELATED, ESTABLISHED -j ACCEPT
+$I -A INPUT -m state --state INVALID -j DROP
+$I -A INPUT -m state --state RELATED, ESTABLISHED -j ACCEPT
+$I -A OUTPUT -m state --state INVALID -j DROP
+$I -A OUTPUT -m state --state RELATED, ESTABLISHED -j ACCEPT
+
+
+$I -A FORWARD -i $IDMZ -o $INET -s $DMZ -j ACCEPT
+$I -t nat -A POSTROUTING -o $INET -s $DMZ -j SNAT --to-source $INET
+
+$I -A FORWARD -i $IDMZ -o $ILAN -s $DMZ -d $DB -p tcp --dport 3306 -j ACCEPT
+$I -A FORWARD -i $IDMZ -o $ILAN -s $DMZ -j DROP
+
+
+$I -A FORWARD -i $ILAN -o $IDMZ -s $LAN -d $SRV1 -p tcp --dport 53 -j ACCEPT
+$I -A FORWARD -i $ILAN -o $IDMZ -s $LAN -d $SRV1 -p udp --dport 53 -j ACCEPT
+
+$I -A FORWARD -i $ILAN -o $IDMZ -s $LAN -d $SRV2 -p tcp -m multiport --dports 53, 80, 443 -j ACCEPT
+$I -A FORWARD -i $ILAN -o $IDMZ -s $LAN -d $SRV2 -p udp --dport 53 -j ACCEPT
+
+
+$I -A FORWARD -i $ILAN -o $INET -s $LAN -p tcp -m multiport --dports 80, 443 -j ACCEPT
+$I -t nat -A POSTROUTING -o $INET -s $LAN -p tcp -m multiport --dports 80, 443 -j SNAT --to-source $INET
+
+$I -A FORWARD -i $ILAN -s $DB -j DROP
+
+
+
+
+
+
+
+
+
+
+
+
+
+ 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

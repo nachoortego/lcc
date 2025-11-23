@@ -1,0 +1,108 @@
+# Definimos variables
+
+I = /sbin/iptables
+LAN = 10.0.1.0/24
+DMZ = 181.16.1.16/28
+INET = 200.3.1.2
+ADMIN = 10.0.1.22
+WWW = 181.16.1.18
+PROXY = 181.16.1.19
+# En la DMZ tenemos 2 servidores:
+# www: que habilita Web (http y https), DNS y ssh
+# Proxy: que habilita Proxy Web (puerto 3128), DNS y ssh
+
+$I -P FORWARD DROP
+$I -P INPUT DROP
+$I -P OUTPUT DROP
+
+$I -A FORWARD -m state --state INVALID -j DROP
+$I -A FORWARD -m state --state RELATED, ESTABLISHED -j ACCEPT
+
+$I -A INPUT -m state --state INVALID -j DROP
+$I -A INPUT -m state --state RELATED, ESTABLISHED -j ACCEPT
+
+$I -A OUTPUT -m state --state INVALID -j DROP
+$I -A OUTPUT -m state --state RELATED, ESTABLISHED -j ACCEPT
+
+# La PC de administración es el único lugar desde donde se puede acceder al servicio ssh de los servidores y el firewall.
+
+$I -A FORWARD -i eth0 -o eth1 -s $ADMIN -d $WWW -p tcp -dport 22 -j ACCEPT
+$I -A FORWARD -i eth0 -o eth1 -s $ADMIN -d $PROXY -p tcp -dport 22 -j ACCEPT
+
+$I -A INPUT -i eth0 -s $ADMIN -p tcp -dport 22 -j ACCEPT
+
+
+# Las PC de la LAN pueden acceder a los servicios restantes de los servidores de la DMZ.
+
+$I -A FORWARD -i eth0 -o eth1 -s $LAN -d $WWW -p tcp -m multiport --dports 80, 443, 53 -j ACCEPT
+$I -A FORWARD -i eth0 -o eth1 -s $LAN -d $WWW -p udp -m multiport --dports 80, 53 -j ACCEPT
+
+$I -A FORWARD -i eth0 -o eth1 -s $LAN -d $PROXY -p tcp -m multiport --dports 3128, 53 -j ACCEPT
+$I -A FORWARD -i eth0 -o eth1 -s $LAN -d $PROXY -p udp --dport 53 -j ACCEPT
+
+
+# Las PC pueden acceder a Internet en forma directa, exceptuando la navegación web que debe realizarse exclusivamente a través del proxy. Para los servicios que no pasan por el proxy, es necesario realizar NAT, pues tienen direcciones privadas.
+
+
+$I -A FORWARD -i eth0 -o eth2 -p tcp -m multiport --dports 80, 443 -j REJECT
+$I -A FORWARD -i eth0 -o eth2 -p udp -dport 80 -j REJECT
+
+$I -A FORWARD -i eth0 -o eth2 -j ACCEPT
+
+$I -t nat -A POSTROUTING -s $LAN -o eth2 -j SNAT --to-source $INET
+
+
+# Los servidores de la DMZ solo pueden acceder a servicios DNS y web en Internet, y no
+tienen acceso alguno a la LAN. 
+
+$I -A FORWARD -i eth1 -o eth2 -s $DMZ -d $INET -p tcp -m multiport --dports 80, 443, 53 -j ACCEPT
+$I -A FORWARD -i eth1 -o eth2 -s $DMZ -d $INET -p udp -m multiport --dports 80, 53 -j ACCEPT
+
+$I -A FORWARD -i eth1 -s $DMZ -j DROP
+
+$I -t nat -A POSTROUTING -o eth2 -s $DMZ -j SNAT --to-source $INET 
+
+
+# Desde Internet, solo se puede acceder a los servicios DNS (ambos servers) y Web del
+“www”
+
+
+$I -A FORWARD -i eth2 -o eth1 -d $WWW -p tcp -m multiport --dports 80, 443, 53 -j ACCEPT
+$I -A FORWARD -i eth2 -o eth1 -d $WWW -p udp --dport  53 -j ACCEPT
+
+$I -A FORWARD -i eth2 -o eth1 -d $PROXY -p tcp --dport 53 -j ACCEPT
+$I -A FORWARD -i eth2 -o eth1 -d $PROXY -p udp --dport 53 -j ACCEPT
+
+$I -A FORWARD -i eth2 -j DROP
+
+$I -t nat -A PREROUTING -i eth2 -d $INET -p tcp -m multiport --dports 80,443,53 -j DNAT --to-destination $WWW
+$I -t nat -A PREROUTING -i eth2 -d $INET -p udp --dport 53 -j DNAT --to-destination $WWW
+
+$I -t nat -A PREROUTING -i eth2 -d $INET -p tcp --dport 53 -j DNAT --to-destination $PROXY
+$I -t nat -A PREROUTING -i eth2 -d $INET -p udp --dport 53 -j DNAT --to-destination $PROXY
+
+
+# El firewall solo tiene acceso al proxy (para actualizaciones)
+
+$I -A OUTPUT -o eth1 -d $PROXY -p tcp --dport 3128 -j ACCEPT
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

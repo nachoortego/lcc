@@ -1,0 +1,156 @@
+[named.conf] de dns.rubikia.com
+
+view "trabajo" {
+	recursion yes;
+	
+	match-clients { 192.168.7.0/24; };
+
+	zone "rubikia.com" {
+		type master;
+		file "/etc/bind/db.rubikia_traba";
+        	allow-transfer { 192.168.7.180; };   // DNS2 slave
+	}
+
+	zone "7.168.192.in-addr.arpa" {
+		type master;
+		file "/etc/bind/rev.rubikia";
+	        allow-transfer { 192.168.7.180; };
+	}
+
+	zone "spiralti.com" {
+		type slave;
+		masters { 31.13.77.51; };
+		file "/etc/bind/db.spiralti"
+	}
+}
+
+view "invitados" {
+	recursion no;
+
+	match-clients { any; };
+
+	zone "rubikia.com" {
+		type master;
+		file "/etc/bind/db.rubikia_inv";
+	}
+}
+
+
+[ named.conf ] de dns2.ddi.rubikia.com
+
+view "trabajo" {
+
+	match-clients { 192.168.7.0/24; }
+
+	zone "ddi.rubikia.com" {
+		type master;
+		file "/etc/bind/db.ddi_rubikia_traba";
+	}
+
+	zone "rubikia.com" {
+		type slave;
+		masters { 192.168.7.18 }
+		file "/etc/bind/db.rubikia_traba";
+		allow-notify { 192.168.7.18; };
+	}
+}
+
+
+
+[ db.rubikia_traba ] 
+
+$TTL 1D
+$ORIGIN rubikia.com.
+
+@ IN SOA dns hostmaster (
+	2020120305;
+	2h;
+	15m;
+	3w;
+	5m;
+)
+
+	IN NS dns
+	IN NS dns2.ddi
+	IN MX 10 mails
+
+dns 		IN A 192.168.7.18
+www		IN A 192.168.7.181
+dns2.ddi	IN A 192.168.7.180
+mails		IN CNAME dns
+flavio		IN A 192.168.7.10
+
+
+[ rev.rubikia ] 
+
+$TTL 1D
+$ORIGIN 7.168.192.in-addr.arpa
+
+@ IN SOA dns.rubikia.com. hostmaster.rubikia.com. (
+	2020120305;
+	2h;
+	15m;
+	3w;
+	5m;
+)
+	IN NS dns.rubikia.com.
+
+18 		IN PTR dns.rubikia.com.
+181		IN PTR www.rubikia.com.
+180		IN PTR dns2.ddi.rubikia.com.
+10		IN PTR flavio.rubikia.com.
+
+
+[ rubikia_inv ] 
+
+$TTL 1D
+$ORIGIN rubikia.com.
+
+@ IN SOA dns hostmaster (
+	2020120305;
+	2h;
+	15m;
+	3w;
+	5m;
+)
+
+	IN NS dns
+
+dns 		IN A 192.168.7.18
+ezequiel 	IN A 192.168.8.100
+
+
+
+[ ddi_rubikia_traba ] 
+
+$TTL 1D
+$ORIGIN ddi.rubikia.com.
+
+@ IN SOA dns2 hostmaster (
+	2020120305;
+	2h;
+	15m;
+	3w;
+	5m;
+)
+
+	IN NS dns2
+
+dns2	IN A 192.168.7.180
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
