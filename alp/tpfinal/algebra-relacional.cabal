@@ -1,0 +1,76 @@
+cabal-version:       2.2
+
+name:                algebra-relacional
+version:             0.1.0.0
+-- synopsis:
+-- description:
+homepage:            https://github.com/githubuser/algebra-relacional#readme
+license:             BSD-3-Clause
+license-file:        LICENSE
+author:              Ignacio Ortego
+maintainer:          ignacioortego110@gmail.com
+copyright:           2026 Ignacio Ortego
+category:            Web
+build-type:          Simple
+extra-source-files:  README.md
+                     CHANGELOG.md
+
+library
+  hs-source-dirs:      src
+  exposed-modules:
+      Core.AST
+      Core.Eval
+      Core.Optimizer
+      Core.Parser
+      Core.Schema
+      Types.Common
+      Types.Monads
+      Types.RelContext
+      Interface.Repl
+      Interface.PPRel
+      Utils.LoadCSV
+  build-depends:
+      base >= 4.7 && < 5
+    , parsec
+    , containers
+    , pretty
+    , mtl
+    , cassava
+    , bytestring
+    , vector
+    , directory
+    , filepath
+  default-language:    Haskell2010
+  ghc-options:
+      -Wall
+      -Wcompat
+      -Widentities
+      -Wincomplete-record-updates
+      -Wincomplete-uni-patterns
+      -Wmissing-export-lists
+      -Wmissing-home-modules
+      -Wpartial-fields
+      -Wredundant-constraints
+
+executable algebra-relacional
+  hs-source-dirs:      app
+  main-is:             Main.hs
+  default-language:    Haskell2010
+  build-depends:       base >= 4.7 && < 5
+                      , algebra-relacional
+                      , containers
+                      , directory
+                      , pretty
+  ghc-options:         -Wall
+                       -Wcompat
+                       -Widentities
+                       -Wincomplete-record-updates
+                       -Wincomplete-uni-patterns
+                       -Wmissing-export-lists
+                       -Wmissing-home-modules
+                       -Wpartial-fields
+                       -Wredundant-constraints
+
+source-repository head
+  type:     git
+  location: https://github.com/nachoortego/algebra-relacional
